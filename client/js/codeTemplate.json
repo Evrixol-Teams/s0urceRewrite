@@ -1,0 +1,19 @@
+{
+"template": [
+	[
+		"<div> if (<span class='user-word'></span> == <span class='random-word'></span>) {<br></div>", 
+		"<div> &emsp;for (var <span class='user-word'></span> = 0; <span class='user-word'></span> < <span class='random-word'></span>; <span class='user-word'></span>++) {<br></div>",
+		"<div>&emsp;&emsp;<span class='user-word'></span>(json.<span class='user-word'></span>[<span class='random-word'></span>]);<br>&emsp;}<br>}</div><br>"
+	],
+	[
+		"<div>function <span class='user-word'></span>(<span class='random-word'></span>) {<br></div>",
+		"<div>&emsp;var <span class='user-word'></span> = <span class='user-word'></span>[<span class='random-word'></span>];<br></div>",
+		"<div>&emsp;<span class='user-word'></span> = <span class='random-word'></span>;<br></div>",
+		"<div>&emsp;return <span class='user-word'></span>;<br>}</div><br>"
+	],
+	[
+		"<div>while (<span class='user-word'></span>) {<br></div>", 
+		"<div>&emsp;if (<span class='user-word'></span> > <span class='random-word'></span> && <span class='user-word'></span> < <span class='random-word'></span>) {<br></div>",
+		"<div>&emsp;&emsp;<span class='user-word'></span>(<span class='random-word'></span>,<span class='random-word'></span>);<br>&emsp;&emsp;break;<br>&emsp;}<br>}</div><br>"]
+]
+}

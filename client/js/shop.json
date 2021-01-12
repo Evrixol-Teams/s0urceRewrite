@@ -1,0 +1,75 @@
+{
+"Firewall": [
+	{
+		"id": "#shop-firewall-charge5",
+		"img": "../client/img/icon-charge-plus.png",
+		"title": "Charge x 5",
+		"desc": "Fills 5 Charges. You can buy it every 30 seconds."
+	},
+	
+	{
+		"id": "#shop-firewall-max_charge10",
+		"img": "../client/img/icon-charge-max.png",
+		"title": "Max Charge + 5",
+		"desc": "Increases Max. Charges +5"
+	},
+	
+	{
+		"id": "#shop-firewall-difficulty",
+		"img": "../client/img/icon-strength-plus.png",
+		"title": "Upgrade Strength",
+		"desc": "Makes it harder to hack your firewalls."
+	},
+	
+	{
+		"id": "#shop-firewall-regen",
+		"img": "../client/img/icon-regen-plus.png",
+		"title": "Increase Regen",
+		"desc": "Increases regeneration + 1/120sec."
+	}
+],
+
+"Market": [
+    {
+		"id": "#shop-basic-miner",
+		"img": "../client/img/icon-miner-1.png",
+		"title": "Data Miner",
+		"desc": "Generates a small amount of BT Coins.<br><img src='../client/img/icon-bt.png' class='icon-small window-bt-icon'>0.0002/s"
+	},
+	
+	{
+		"id": "#shop-advanced-miner",
+		"img": "../client/img/icon-miner-2.png",
+		"title": "Advanced Miner",
+		"desc": "The latest technology of miners, generating a lot more BT Coins.<br><img src='../client/img/icon-bt.png' class='icon-small window-bt-icon'>0.0075/s"
+	},
+	
+	{
+		"id": "#shop-mining-drill",
+		"img": "../client/img/icon-miner-3.png",
+		"title": "Mining Drill",
+		"desc": "Drills deep into the ancient BT Coin chambers and transports them right to your computer.<br><img src='../client/img/icon-bt.png' class='icon-small window-bt-icon'>0.039/s"
+	},
+	
+	{
+		"id": "#shop-data-center",
+		"img": "../client/img/icon-miner-4.png",
+		"title": "Data Center",
+		"desc": "An entire hall of advanced BT Coin Miners.<br><img src='../client/img/icon-bt.png' class='icon-small window-bt-icon'>1.07/s"
+	},
+	
+	{
+		"id": "#shop-bot-net",
+		"img": "../client/img/icon-miner-5.png",
+		"title": "Botnet",
+		"desc": "Infected computers all around the world that mine BT Coins for you.<br><img src='../client/img/icon-bt.png' class='icon-small window-bt-icon'>6.4/s"
+	},
+	
+	{
+		"id": "#shop-quantum-server",
+		"img": "../client/img/icon-miner-6.png",
+		"title": "Quantum Server",
+		"desc": "Energy is extracted from the universe and converted by enormous pressure into the purest BT Coins.<br><img src='../client/img/icon-bt.png' class='icon-small window-bt-icon'>53.33/s"
+	}
+]
+}
