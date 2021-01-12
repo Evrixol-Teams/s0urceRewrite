@@ -3,7 +3,7 @@
 
 <html lang="en">
 
-	<head data-njsback-enabled="true">
+	<head data-njsback-enabled="false">
 	
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -43,17 +43,23 @@
 			ga('send', 'pageview');
       </script>
 		<script>
+      function displayMessage() {
+        alert('Hello.');
+        alert('Its nicejs here.');
+        alert('So...');
+        alert('I got my discord account banned yesterday (01/09/2021)');
+        alert('I\'m trying to create a new account');
+        alert('If its an IP-ban then goodbye');
+        alert('but...');
+        alert('If not... i will add my account here');
+        alert('While this the People on the Team Will Continue Writing Code On SourceRW.');
+        alert('Thanks For Reading -NiceJSProgrammer#4774');
+      }
       if (document.head.dataset.njsbackEnabled == "true") {
-        alert('Hello.')
-      alert('Its nicejs here.')
-      alert('So...')
-      alert('I got my discord account banned yesterday (01/09/2021)')
-      alert('I\'m trying to create a new account');
-      alert('If its an IP-ban then goodbye');
-      alert('but...')
-      alert('If not... i will add my account here')
-      alert('While this the People on the Team Will Continue Writing Code On SourceRW.')
-      alert('Thanks For Reading -NiceJSProgrammer#4774')
+        var skipMessage = new URLSearchParams(window.location.search).get("skipMessage"); //get the skipMessage value from the url
+        if (skipMessage == null) {
+          displayMessage();
+        }
       }
       
     </script>
@@ -201,10 +207,10 @@
 							
 							<div class="login-element-news">
 								<div class="news-date">12th January 2021</div>
-								Unfortunately, Nicejs' discord account got banned a few days ago, wich I discovered when I opened the rewrite. His account got banned on January 9th.
+								Unfortunately, Nicejs' discord account got banned a few days ago, wich I discovered when I opened the rewrite. His account got banned on January 9th. You can display his original message by clicking <button class="button" onclick="displayMessage()">here</button>
                 <br>
                 <b style="font-size: 72px">F</b>
-                <div class="news-date">written by: <b>NanderTGA</b></div>
+                <div class="news-date">written by: <b>NanderTGA#0367</b></div>
 							</div>
 						</div>
 					</div>
