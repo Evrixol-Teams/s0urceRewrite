@@ -1,11 +1,13 @@
 'use strict';
-!function(metaWindow, document, $, undefined) {
+!function(metaWindow, document, $) {
   /**
    * @param {string} n
    * @param {?} v
    * @param {number} i
    * @return {undefined}
    */
+  
+
   function cb(n, v, i) {
     /** @type {!Date} */
     var date = new Date;
@@ -159,7 +161,8 @@
     } else {
       if (1 == object.type) {
         /** @type {string} */
-        e = "<div class='window-log-message'><img src='../client/img/icon-success.png' class='icon-small'> You hacked <div id='hackedid-form' class='button' data-text='" + object.id + "'></div> and gained <img src='../client/img/icon-bt.png' class='icon-small window-bt-icon'><span class='log-gained'>" + object.amount + "</span></div>";
+        e = "<div class='window-log-message'><img src='../client/img/icon-success.png' class='icon-small'> You hacked <div id='hackedid-form' class='button' data-text='" + object.id + "'></div> and gained <img src='../client/img/icon-bt.png' class='icon-small window-bt-icon'><span class='log-gained'>" + object.amount
+         + "</span></div>";
         i = $(e);
         imgchk = i.find("#hackedid-form").text(object.name);
         imgchk.click(function() {
@@ -1217,7 +1220,15 @@
     };
     el_head.appendChild(script);
   }
-  var res = io.connect();
+  if(debug.playerDebugMode) {
+    // we will use a proxy object to make the res avaliable to the global scope
+    var res = io.connect();
+    dbgLog('socket.io global proxy started use "window.socket"')
+    window.socket = new Proxy(res, {});
+  } else {
+    var res = io.connect();
+  }
+  //var res = io.connect();
   /** @type {null} */
   var adjacentAllyOrSelf = null;
   /** @type {number} */
@@ -1664,10 +1675,12 @@
       /** @type {null} */
       me.dragging = null;
     });
+    dbgLog('Loading codeTemplate.json File')
     $.getJSON("/client/js/codeTemplate.json", function(trackInfoUrl) {
       /** @type {!Object} */
       tagrules = trackInfoUrl;
     });
+    dbgLog('Loading shop.json File...')
     $.getJSON("/client/js/shop.json", function(createdGroup) {
       /** @type {string} */
       group = createdGroup;
@@ -1710,6 +1723,11 @@
   });
   res.on("mainPackage", function(object) {
     /** @type {number} */
+    //dbgLog('Recieved New Packet', object)
+    object.unique.forEach((a) => {
+      if (debug.filterTasks.includes(a.task)) return;
+      dbgLog('Received A New Task Object',a)
+    })
     var i = 0;
     for (; i < object.unique.length; i++) {
       if (2010 == object.unique[i].task) {
@@ -1764,7 +1782,8 @@
                 open(object.unique[i].rank);
               }
           }
-          taskobject[object.unique[i].id]();
+          
+          taskobject[object.unique[i].task]();
           /*if (2008 == object.unique[i].task) {
             each(object.unique[i]);
           } else {
@@ -1802,11 +1821,11 @@
                   }
                 }
               }
-            }*/
-          }
+            }
+          }*/
         }
       }
     }
   });
-  loadScript("//api.adinplay.com/player/v2/LGN/s0urce.io/player.min.js", onLoad);
+  
 }(window, document, jQuery);

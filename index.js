@@ -16,9 +16,9 @@ var utils = {
   playerCreator: require('./utils/playercreator.js'),
   taskmanager: require('./utils/taskmgr.js')
 }
-var players = [
-  utils.playerCreator('Server','IN-PROGRESS',5,6969,"Welcome to the S0urce.io Private Server 0.1 Alpha!",69)
-];
+var players = {
+  "1": utils.playerCreator('Server','IN-PROGRESS',5,6969,"Welcome to the S0urce.io Private Server 0.1 Alpha!",69)
+};
 
 var socketlist = [];
 
@@ -120,7 +120,8 @@ io.on('connection',(socket) => {
         150,
         'dont try to beat me loser',
         players.length
-      )
+      ),
+      socket.id
     )
     socketlist.push(socket);
     }else{
@@ -129,15 +130,23 @@ io.on('connection',(socket) => {
         c.name,
         socket.id,
         0,
-        0,
+        1,
         'No quote',
-        players.length
-      )
+        Object.keys(players).length,
+        ["not hacked yet",".........."]
+      ),
+      socket.id
     )
-    socketlist.push(socket);
+    socket.playerid=socketlist.push(socket);
     }
   })
+  socket.on('disconnect',() => {
+    socketlist.splice(socket.playerid,1)
+    delete players[socket.id];
+    
+  })
 })
+
 setInterval(() => {
   socketlist.forEach((socket) => {
     displayPlayers(socket);
@@ -149,7 +158,7 @@ function displayPlayers(socket) {
     unique: [
       {
         task: 2008,
-        data: players,
+        data: Object.entries(players).map((x,y) => {return x[1]}),
         topFive: [
           utils.playerCreator('Server','IN-PROGRESS',5,6969,"Welcome to the S0urce.io Private Server 0.1 Alpha!",69)
         ]
@@ -159,8 +168,9 @@ function displayPlayers(socket) {
         
   })
 }
-function addPlayer(data) {
-  players.push(data);
+function addPlayer(data,id) {
+  players[id] = data;
+  
 }
 
 

@@ -54,14 +54,7 @@
         alert('If not... i will add my account here');
         alert('While this the People on the Team Will Continue Writing Code On SourceRW.');
         alert('Thanks For Reading -NiceJSProgrammer#4774');
-      }
-      if (document.head.dataset.njsbackEnabled == "true") {
-        var skipMessage = new URLSearchParams(window.location.search).get("skipMessage"); //get the skipMessage value from the url
-        if (skipMessage == null) {
-          displayMessage();
-        }
-      }
-      
+      }      
     </script>
 	</head>
 
@@ -204,7 +197,23 @@
 							
 							<br><br>
 							<b>Updates</b>
-							
+              <div class="login-element-news">
+								<div class="news-date">13th January 2021</div>
+								<p style="font-size: 24px;">Bruh</p>
+                <p>
+                  Got my new account disabled again so i think its an IP-ban
+                </p>
+                <div class="news-date">written by: <b>NiceJSProgrammer#4774</b></div>
+							</div>
+							<div class="login-element-news">
+								<div class="news-date">13th January 2021</div>
+								<p style="font-size: 24px;">Got a new account</p>
+                <p>Its nicejs here, so apparently my account was not deleted but it was just disabled, so it was not an IP-ban and i could make a new one
+                  Here is the username: TheRealNiceJS#4443
+                  (btw i was running out of ideas for usernames xD)
+                </p>
+                <div class="news-date">written by: <b>NiceJSProgrammer#4774</b></div>
+							</div>
 							<div class="login-element-news">
 								<div class="news-date">12th January 2021</div>
 								Unfortunately, Nicejs' discord account got banned a few days ago, wich I discovered when I opened the rewrite. His account got banned on January 9th. You can display his original message by clicking <button class="button" onclick="displayMessage()">here</button>
@@ -1158,8 +1167,9 @@
 		<div id="preroll"></div>
 		
 		<!--Script-->
+    <script src="/client/js/extraTools.js"></script>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-		<script type="text/javascript" src="/client/js/plugin-min.js"></script>
-		<script type="text/javascript" src="/client/js/clientD.js"></script>
+		<script type="text/javascript" src="/client/js/plugin-min.js"></script><!-- this script SHOULD be the socket.io -->
+		<script type="text/javascript" src="/client/js/clientD-fix.js"></script><!--clientD script main core file-->
 	</body>
 </html>

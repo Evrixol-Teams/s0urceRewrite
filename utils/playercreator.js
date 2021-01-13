@@ -1,4 +1,4 @@
-module.exports = function createPlayer(name,id,rank,level,desc,position) {
+module.exports = function createPlayer(name,id,rank,level,desc,position,comms = ["..................","................"]) {
   return {
     id: id,
     name: name,
@@ -6,6 +6,7 @@ module.exports = function createPlayer(name,id,rank,level,desc,position) {
     country: "kp",
     desc: desc,
     level: level,
-    rank: position
+    rank: position,
+    comm: {first: comms[0], second: comms[1]}
   }
 };
