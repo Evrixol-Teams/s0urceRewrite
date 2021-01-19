@@ -20,7 +20,7 @@ var players = {
   "1": utils.playerCreator('Server','IN-PROGRESS',5,6969,"Welcome to the S0urce.io Private Server 0.1 Alpha!",69)
 };
 
-var socketlist = [];
+var socketlist = {};
 
 const app = express();
 app.use(cookieParser());
@@ -107,7 +107,7 @@ app.get('/protected', (req, res) =>{
 */
 //////////////////////////////////////////////////////////////////////////////////////////////// end admin
 
-io.on('connection',(socket) => {
+/*io.on('connection',(socket) => {
   socket.on('signIn',(c) => {
     socket.emit('prepareClient',socket.id);
     utils.startPacket(socket);
@@ -145,12 +145,73 @@ io.on('connection',(socket) => {
     delete players[socket.id];
     
   })
+})*/
+io.on('connection',(socket) => {
+  var pkgEmit = pkgEmitCreate(socket);
+  socket.on('signIn',(data) => {
+    var name = data.name;
+    socket.player = {
+      name: name,
+      rank: 0,
+      level: 1,
+      comms: {
+        first: "........................",
+        second: "........................"
+      }
+    }
+    socketlist[name] = socket;
+    
+    addPlayer(utils.playerCreator(
+      name,
+      socket.id,
+      socket.player.rank,
+      socket.player.level,
+      "",
+      Object.keys(players).length,
+      [socket.player.comms.first, socket.player.comms.second]
+    ), socket.id)
+
+    socket.emit('prepareClient',socket.id);
+    utils.startPacket(socket);
+  })
+  socket.on('disconnect',() => {
+    delete socketlist[socket.id];
+    delete players[socket.id];
+  })
+  socket.on('playerRequest',(data) => {
+    console.log(data);
+    switch (data) {
+      case 666:
+        socket.player = {
+          name: name,
+          rank: 0,
+          level: 1,
+          comms: {
+            first: "........................",
+            second: "........................"
+          }
+        }
+        socketlist[name] = socket;
+    
+        addPlayer(utils.playerCreator(
+          name,
+          socket.id,
+          socket.player.rank,
+          socket.player.level,
+          "",
+          Object.keys(players).length,
+          [socket.player.comms.first, socket.player.comms.second]
+        ), socket.id)
+        break;
+    }
+  })
 })
 
 setInterval(() => {
-  socketlist.forEach((socket) => {
+  for (var item in socketlist) {
+    socket = socketlist[item]
     displayPlayers(socket);
-  })
+  }
 },1000)
 
 function displayPlayers(socket) {
@@ -171,6 +232,15 @@ function displayPlayers(socket) {
 function addPlayer(data,id) {
   players[id] = data;
   
+}
+function pkgEmitCreate(socket) {
+return function pkgEmit(...data) {
+socket.emit(
+  {
+    unique: data
+  }
+)
+}
 }
 
 
