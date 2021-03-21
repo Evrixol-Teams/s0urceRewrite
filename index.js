@@ -207,7 +207,7 @@ io.on('connection',(socket) => {
         ), socket.id)
         break;
       case 300:
-        console.log("idk (case 300)");
+        console.log("talking (case 300)");
         break;
       case 100:
         port = firewall_ports[data.port];
