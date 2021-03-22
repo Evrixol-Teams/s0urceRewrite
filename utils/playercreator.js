@@ -1,4 +1,4 @@
-module.exports = function createPlayer(name,id,rank,level,desc,position,comms = ["..................","................"]) {
+module.exports = function createPlayer(name,id,rank,level,desc,position,comms = [".........","........."]) {
   return {
     id: id,
     name: name,

@@ -1226,7 +1226,12 @@
     dbgLog('socket.io global proxy started use "window.socket"')
     window.socket = new Proxy(res, {});
   } else {
-    var res = io.connect();
+    if (localStorage.server) {
+      var res = io.connect(localStorage.server)
+    } else {
+      var res = io.connect();
+    }
+    
   }
   //var res = io.connect();
   /** @type {null} */
