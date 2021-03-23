@@ -15,6 +15,7 @@ and what about the playerdebugmode script or chrome developer tools?
 
 */
 
+try {
 
 const express = require('express');
 const cookieParser = require('cookie-parser');
@@ -153,8 +154,13 @@ app.get('/protected', (req, res) =>{
 })*/
 io.on('connection',(socket) => {
   var pkgEmit = pkgEmitCreate(socket);
+  // In case of 'signIn' event trigger not having appropriate name data, catch exception & set username to 'AnonXXX'.
   socket.on('signIn',(data) => {
-    var name = data.name;
+    try {
+      var name = data.name;
+    } catch(err) {
+      var name = "Anon" + (Math.floor(Math.random() * 999) + 1).toString()
+    }
     socket.player = {
       name: name,
       rank: 0,
@@ -235,8 +241,8 @@ io.on('connection',(socket) => {
       case 300: // send message eg {"task":300,"id":"player-id","message":"hi"}
         break;
     }
-  })
-})
+  });
+});
 
 setInterval(() => {
   for (var item in socketlist) {
@@ -282,3 +288,7 @@ app.use('/ads', utils.adRemover);
 server.listen(3000, () => {
   console.log('server started');
 });
+
+} catch(err) {
+  console.log("shit")
+}
