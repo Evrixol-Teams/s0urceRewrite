@@ -7,6 +7,12 @@ hey nicejs, are you still active?
 I guess not
 
 
+ok instead of burp im just gonna log websocket through hijacking the websocket module on browsers
+check utils/websocket-scout.js
+~Yours Truly#4285
+
+and what about the playerdebugmode script or chrome developer tools?
+
 */
 
 
