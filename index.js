@@ -22,7 +22,7 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const Database = require("@replit/database");
 var httpServer = require('http').createServer;
-var utils = {
+const utils = {
   startPacket: require('./utils/startpacket.js'),
   playerCreator: require('./utils/playercreator.js'),
   taskmanager: require('./utils/taskmgr.js'),
