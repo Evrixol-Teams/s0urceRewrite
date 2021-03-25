@@ -291,5 +291,5 @@ try {
     });
 
 } catch (err) {
-    console.log("shit")
+    console.log(err);
 }
