@@ -1,0 +1,6 @@
+# The `.replit` documentation does not mention any 'stop', 'halt' or 'abort' entries. 
+# The 'run' button does not update when using the `.replit` file and fails to 'stop' the application.
+# If trying to use the run button and exceptions are thrown, it is liable that the application is running.
+# `.replit` docs : https://docs.replit.com/repls/dot-replit
+run = "npm start"
+onBoot = "Application start | Using PM2 via NPM Start"
