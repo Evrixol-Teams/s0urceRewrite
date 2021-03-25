@@ -13,14 +13,17 @@ check utils/websocket-scout.js
 
 and what about the playerdebugmode script or chrome developer tools?
 
+I guess those would work, but it's probably harder to find it on developer tools?
+btw I found mainPackage info https://replit.com/@s0urceiorw/s0urce-server#client/js/clientD-fix.js:1729
+
 */
 try {
-    const config = require(__dirname+'/config.json'); // In the case of attempting to test this locally, the config file is there to ensure that config data (like the databse) isn't hard encoded. 
+
     const express = require('express');
     const cookieParser = require('cookie-parser');
     const bodyParser = require('body-parser');
-    const Database = require(config.database);
-    const httpServer = require('http').createServer;
+    const Database = require("@replit/database");
+    var httpServer = require('http').createServer;
     const utils = {
         startPacket: require('./utils/startpacket.js'),
         playerCreator: require('./utils/playercreator.js'),
@@ -154,10 +157,6 @@ try {
     io.on('connection', (socket) => {
         var pkgEmit = pkgEmitCreate(socket);
         // In case of 'signIn' event trigger not having appropriate name data, catch exception & set username to 'AnonXXX'.
-        
-        // @TODO In case of this try-catch block being triggered, an account is created but is not assigned.
-        // Ensure that the socket is assigned to the account.
-        // -Vlad
         socket.on('signIn', (data) => {
             try {
                 var name = data.name;
@@ -292,5 +291,5 @@ try {
     });
 
 } catch (err) {
-    console.log(err);
+    console.log("shit")
 }
