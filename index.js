@@ -17,35 +17,35 @@ I guess those would work, but it's probably harder to find it on developer tools
 btw I found mainPackage info https://replit.com/@s0urceiorw/s0urce-server#client/js/clientD-fix.js:1729
 
 */
-try {
 
-    const express = require('express');
-    const cookieParser = require('cookie-parser');
-    const bodyParser = require('body-parser');
-    const Database = require("@replit/database");
-    var httpServer = require('http').createServer;
-    const utils = {
-        startPacket: require('./utils/startpacket.js'),
-        playerCreator: require('./utils/playercreator.js'),
-        taskmanager: require('./utils/taskmgr.js'),
-        adRemover: require('./utils/adRemover.js')
-    }
-    var players = {
-        "1": utils.playerCreator('Server', 'IN-PROGRESS', 5, 6969, "Welcome to the S0urce.io Private Server 0.1 Alpha!", 69)
-    };
 
-    var socketlist = {};
+const express = require('express');
+const cookieParser = require('cookie-parser');
+const bodyParser = require('body-parser');
+const Database = require("@replit/database");
+var httpServer = require('http').createServer;
+const utils = {
+  startPacket: require('./utils/startpacket.js'),
+  playerCreator: require('./utils/playercreator.js'),
+  taskmanager: require('./utils/taskmgr.js'),
+  adRemover: require('./utils/adRemover.js')
+}
+var players = {
+  "1": utils.playerCreator('Server', 'IN-PROGRESS', 5, 6969, "Welcome to the S0urce.io Private Server 0.1 Alpha!", 69)
+};
 
-    const app = express();
-    app.use(cookieParser());
+var socketlist = {};
 
-    server = httpServer(app);
+const app = express();
+app.use(cookieParser());
 
-    var io = require('socket.io')(server)
+server = httpServer(app);
 
-    app.get('/', (req, res) => {
-        res.sendFile(__dirname + "/client/index.html");
-    });
+var io = require('socket.io')(server)
+
+app.get('/', (req, res) => {
+  res.sendFile(__dirname + "/client/index.html");
+});
 
     ////////////////////////////////////////////////////////////////////////////////////////////// admin panel
     /*
@@ -282,14 +282,10 @@ try {
     }
 
 
-    // some crazy stuff going on with MIME so i changed the position
-    app.use('/client', express.static(__dirname + "/client"));
-    app.use('/ads', utils.adRemover);
+  // some crazy stuff going on with MIME so i changed the position
+  app.use('/client', express.static(__dirname + "/client"));
+  app.use('/ads', utils.adRemover);
 
-    server.listen(3000, () => {
-        console.log('server started');
-    });
-
-} catch (err) {
-    console.log(err);
-}
+  server.listen(3000, () => {
+      console.log('server started');
+  });
