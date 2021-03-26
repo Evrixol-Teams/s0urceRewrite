@@ -3,5 +3,4 @@
 # If trying to use the run button and exceptions are thrown, it is liable that the application is running.
 # `.replit` docs : https://docs.replit.com/repls/dot-replit
 run = "npm start"
-stop = "npm stop"
 onBoot = "echo 'Booting repl...\nTo run use the \u0027run\u0027 button or \u0027npm start\u0027\nTo stop use \u0027npm stop\u0027\nIf an error is encountered when trying to run the repl, application may already be running.'"

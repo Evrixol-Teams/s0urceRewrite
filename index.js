@@ -154,7 +154,15 @@ app.get('/protected', (req, res) =>{
     
   })
 })*/
+//added try catch logic >:D
+/*
+try{
+
+}
+catch(err){console.error(err);socket.close(1000);}
+*/
 io.on('connection', (socket) => {
+//try{
   var pkgEmit = pkgEmitCreate(socket);
   // In case of 'signIn' event trigger not having appropriate name data, catch exception & set username to 'AnonXXX'.
   socket.on('signIn', (data) => {
@@ -190,58 +198,60 @@ io.on('connection', (socket) => {
     delete socketlist[socket.id];
     delete players[socket.id];
   })
-    const firewall_ports = {
-        0: 'A',
-        1: 'B',
-        2: 'C'
-    };
-    socket.on('playerRequest', (data) => {
-        console.log(data);
-        switch (data.task) {
-            case 666: // restart
-                socket.player = {
-                    name: name,
-                    rank: 0,
-                    level: 1,
-                    comms: {
-                        first: ".........",
-                        second: "........."
-                    }
-                }
-                socketlist[name] = socket;
-
-                addPlayer(utils.playerCreator(
-                    name,
-                    socket.id,
-                    socket.player.rank,
-                    socket.player.level,
-                    "",
-                    Object.keys(players).length, [socket.player.comms.first, socket.player.comms.second]
-                ), socket.id)
-                break;
-            case 300:
-                console.log("talking (case 300)");
-                break;
-            case 100:
-                port = firewall_ports[data.port];
-                console.log("player with id " + socket.id + " hacking player with id " + data.id + " on port " + port);
-                socket.emit()
-                    ///////////////////////////////////////////////help what do i need to input to socket.emit
-                break;
-            case 103:
-                console.log("player with id " + socket.id + " is trying to buy something with id " + data.id)
-                break;
-            case 102:
-                port = firewall_ports[data.fid];
-                console.log("something shall be upgraded (thing " + data.id + ")at port " + port);
-                break;
-            case 777: // eg {"task":777,"word":"left"}
-                console.log("check word typed in cdm for player with id: " + socket.id)
-                break;
-            case 300: // send message eg {"task":300,"id":"player-id","message":"hi"}
-                break;
+  const firewall_ports = {
+    0: 'A',
+    1: 'B',
+    2: 'C'
+  };
+  socket.on('playerRequest', (data) => {
+    console.log(data);
+    switch (data.task) {
+      case 666: // restart
+        socket.player = {
+          name: name,
+          rank: 0,
+          level: 1,
+          comms: {
+            first: ".........",
+            second: "........."
+          }
         }
-    });
+        socketlist[name] = socket;
+
+        addPlayer(utils.playerCreator(
+          name,
+          socket.id,
+          socket.player.rank,
+          socket.player.level,
+          "",
+          Object.keys(players).length, [socket.player.comms.first, socket.player.comms.second]
+        ), socket.id)
+        break;
+      case 300:
+        console.log("talking (case 300)");
+        break;
+      case 100:
+        port = firewall_ports[data.port];
+        console.log("player with id " + socket.id + " hacking player with id " + data.id + " on port " + port);
+        //socket.emit()
+        ///////////////////////////////////////////////help what do i need to input to socket.emit
+        break;
+      case 103:
+        console.log("player with id " + socket.id + " is trying to buy something with id " + data.id)
+        break;
+      case 102:
+        port = firewall_ports[data.fid];
+        console.log("something shall be upgraded (thing " + data.id + ")at port " + port);
+        break;
+      case 777: // eg {"task":777,"word":"left"}
+        console.log("check word typed in cdm for player with id: " + socket.id)
+        break;
+      case 300: // send message eg {"task":300,"id":"player-id","message":"hi"}
+        break;
+    }
+  });
+//}
+//catch(err){console.error(err);socket.close(1000);}
 });
 
 setInterval(() => {
@@ -250,7 +260,7 @@ setInterval(() => {
     displayPlayers(socket);
   }
 }, 4000)
-
+;
 function displayPlayers(socket) {
   socket.emit('mainPackage', {
     unique: [{
@@ -273,7 +283,7 @@ function pkgEmitCreate(socket) {
   return function pkgEmit(...data) {
     socket.emit({
       unique: data
-    })
+    });
   }
 }
 
