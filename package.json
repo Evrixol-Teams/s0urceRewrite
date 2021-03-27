@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "pm2 start index.js --name='script'",
+    "test": "pm2 logs",
+    "start": "pm2 start index.js --name='script' && pm2 logs",
     "stop": "pm2 stop script"
   },
   "keywords": [],

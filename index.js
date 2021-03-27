@@ -155,14 +155,8 @@ app.get('/protected', (req, res) =>{
   })
 })*/
 //added try catch logic >:D
-/*
-try{
-
-}
-catch(err){console.error(err);socket.close(1000);}
-*/
 io.on('connection', (socket) => {
-//try{
+try{
   var pkgEmit = pkgEmitCreate(socket);
   // In case of 'signIn' event trigger not having appropriate name data, catch exception & set username to 'AnonXXX'.
   socket.on('signIn', (data) => {
@@ -250,8 +244,8 @@ io.on('connection', (socket) => {
         break;
     }
   });
-//}
-//catch(err){console.error(err);socket.close(1000);}
+}
+catch(err){console.error(err);socket.close(1000);}
 });
 
 setInterval(() => {
