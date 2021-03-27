@@ -6,7 +6,9 @@
   "scripts": {
     "test": "pm2 logs",
     "start": "pm2 start index.js --name='script' && pm2 logs",
-    "stop": "pm2 stop script"
+    "stop": "pm2 stop script",
+    "running": "pm2 jlist | grep -oP '(?<=\"status\": \")[^\"]*'",
+    "status": "pm2 status"
   },
   "keywords": [],
   "author": "",
