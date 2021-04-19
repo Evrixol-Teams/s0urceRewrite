@@ -156,7 +156,7 @@ app.get('/protected', (req, res) =>{
 })*/
 //added try catch logic >:D
 io.on('connection', (socket) => {
-try{
+try {
   var pkgEmit = pkgEmitCreate(socket);
   // In case of 'signIn' event trigger not having appropriate name data, catch exception & set username to 'AnonXXX'.
   socket.on('signIn', (data) => {
@@ -189,6 +189,7 @@ try{
     utils.startPacket(socket);
   })
   socket.on('disconnect', () => {
+    socket.destroy(); // to prevent fake disconnects
     delete socketlist[socket.id];
     delete players[socket.id];
   })
@@ -198,6 +199,7 @@ try{
     2: 'C'
   };
   socket.on('playerRequest', (data) => {
+    try{
     console.log(data);
     switch (data.task) {
       case 666: // restart
@@ -221,9 +223,6 @@ try{
           Object.keys(players).length, [socket.player.comms.first, socket.player.comms.second]
         ), socket.id)
         break;
-      case 300:
-        console.log("talking (case 300)");
-        break;
       case 100:
         port = firewall_ports[data.port];
         console.log("player with id " + socket.id + " hacking player with id " + data.id + " on port " + port);
@@ -241,11 +240,25 @@ try{
         console.log("check word typed in cdm for player with id: " + socket.id)
         break;
       case 300: // send message eg {"task":300,"id":"player-id","message":"hi"}
+        io.to(data.id).emit('mainPackage', {
+          unique: [{
+            task: 2006,
+            id: socket.id,
+            name: socket.player.name,
+            message: data.message
+          }]
+        });
         break;
     }
+    }catch(err){
+      console.error(err);
+      socket.destroy();
+    }
   });
+} catch(err) {
+  console.error(err);
+  socket.destroy();
 }
-catch(err){console.error(err);socket.close(1000);}
 });
 
 setInterval(() => {
