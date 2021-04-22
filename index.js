@@ -113,47 +113,7 @@ app.get('/protected', (req, res) =>{
 */
 //////////////////////////////////////////////////////////////////////////////////////////////// end admin
 
-//                                 why is this commented out?? delete it if you don't need it //////
-//--- just in case somthing breaks
-/*io.on('connection',(socket) => {
-  socket.on('signIn',(c) => {
-    socket.emit('prepareClient',socket.id);
-    utils.startPacket(socket);
-    if(c.name.includes("Cheat")){
-    addPlayer(
-      utils.playerCreator(
-        c.name.replace("Cheat", ""),
-        socket.id,
-        5,
-        150,
-        'dont try to beat me loser',
-        players.length
-      ),
-      socket.id
-    )
-    socketlist.push(socket);
-    }else{
-    addPlayer(
-      utils.playerCreator(
-        c.name,
-        socket.id,
-        0,
-        1,
-        'No quote',
-        Object.keys(players).length,
-        ["not hacked yet",".........."]
-      ),
-      socket.id
-    )
-    socket.playerid=socketlist.push(socket);
-    }
-  })
-  socket.on('disconnect',() => {
-    socketlist.splice(socket.playerid,1)
-    delete players[socket.id];
-    
-  })
-})*/
+
 //added try catch logic >:D
 io.on('connection', (socket) => {
 try {
@@ -189,7 +149,7 @@ try {
     utils.startPacket(socket);
   })
   socket.on('disconnect', () => {
-    socket.destroy(); // to prevent fake disconnects
+    socket.disconnect(); // to prevent fake disconnects
     delete socketlist[socket.id];
     delete players[socket.id];
   })
@@ -204,7 +164,7 @@ try {
     switch (data.task) {
       case 666: // restart
         socket.player = {
-          name: name,
+          name: socket.player.name,
           rank: 0,
           level: 1,
           comms: {
@@ -212,10 +172,10 @@ try {
             second: "........."
           }
         }
-        socketlist[name] = socket;
+        socketlist[socket.player.name] = socket;
 
         addPlayer(utils.playerCreator(
-          name,
+          socket.player.name,
           socket.id,
           socket.player.rank,
           socket.player.level,
@@ -225,7 +185,7 @@ try {
         break;
       case 100:
         port = firewall_ports[data.port];
-        console.log("player with id " + socket.id + " hacking player with id " + data.id + " on port " + port);
+        console.log(`player with id ${socket.id} hacking player with id ${data.id} on port ${port}`);
         //socket.emit()
         ///////////////////////////////////////////////help what do i need to input to socket.emit
         break;
@@ -252,12 +212,12 @@ try {
     }
     }catch(err){
       console.error(err);
-      socket.destroy();
+      socket.disconnect();
     }
   });
 } catch(err) {
   console.error(err);
-  socket.destroy();
+  socket.disconnect();
 }
 });
 
