@@ -1,6 +1,3 @@
-# The `.replit` documentation does not mention any 'stop', 'halt' or 'abort' entries. 
-# The 'run' button does not update when using the `.replit` file and fails to 'stop' the application.
-# If trying to use the run button and exceptions are thrown, it is liable that the application is running.
 # `.replit` docs : https://docs.replit.com/repls/dot-replit
 run = "npm start"
-onBoot = "echo 'Booting repl...\nTo run use the \u0027run\u0027 button or \u0027npm start\u0027\nTo stop use \u0027npm stop\u0027\nIf an error is encountered when trying to run the repl, application may already be running.'"
+onBoot = "echo 'Booting repl...\nTo run use the run button or npm start"
