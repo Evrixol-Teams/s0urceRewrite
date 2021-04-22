@@ -19,6 +19,7 @@ btw I found mainPackage info https://replit.com/@s0urceiorw/s0urce-server#client
 */
 
 
+const settings = require('./settings.js')
 const express = require('express');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
@@ -117,7 +118,7 @@ app.get('/protected', (req, res) =>{
 //added try catch logic >:D
 io.on('connection', (socket) => {
 try {
-  var pkgEmit = pkgEmitCreate(socket);
+  socket.pkgEmit = pkgEmitCreate(socket);
   // In case of 'signIn' event trigger not having appropriate name data, catch exception & set username to 'AnonXXX'.
   socket.on('signIn', (data) => {
     try {
@@ -259,6 +260,8 @@ function pkgEmitCreate(socket) {
 app.use('/client', express.static(__dirname + "/client"));
 app.use('/ads', utils.adRemover);
 
-server.listen(3000, () => {
+server.listen(settings.port, () => {
   console.log('server started');
+  console.log("execute code:")
+  console.log(process.stdin)
 });
