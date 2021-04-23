@@ -187,6 +187,17 @@ try {
       case 100:
         port = firewall_ports[data.port];
         console.log(`player with id ${socket.id} hacking player with id ${data.id} on port ${port}`);
+        io.to(data.id).emit("mainPackage", {
+          unique: [{
+            task: 2000,
+            data: {
+              type: 0,
+              id: data.id,
+              name: socket.player.name,
+              port: data.port
+            }
+          }]
+        });
         //socket.emit()
         ///////////////////////////////////////////////help what do i need to input to socket.emit
         break;
