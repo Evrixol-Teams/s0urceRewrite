@@ -198,8 +198,6 @@ try {
             }
           }]
         });
-        //socket.emit()
-        ///////////////////////////////////////////////help what do i need to input to socket.emit
         break;
       case 103:
         console.log("player with id " + socket.id + " is trying to buy something with id " + data.id)
