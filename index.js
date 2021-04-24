@@ -15,7 +15,7 @@ class Upgrade{
 	 * @param {Player} player
 	 * @param {Number} price 
 	 * @param {Boolean} fixedPrice 
-	 * @param {Number | null} dataMiner 
+	 * @param {Number} [dataMiner] 
 	 */
 	constructor(player, price, fixedPrice = false, dataMiner = null){
 		this.player = player;
@@ -42,7 +42,11 @@ class Upgrade{
 		return data;
 	}
 
-	purchase(){
+	/**
+	 * @param {Number} [firewallID]
+	 * @param {Number} [upgradeID]
+	 */
+	purchase(firewallID = null, firewallUpgradeID = null){
 		if(this.player.coins.value >= this.price){
 			this.player.coins.value -= this.price;
 			this.price;
@@ -56,7 +60,12 @@ class Upgrade{
 					this.price = (A * Math.pow(1.1, this.amount - 1));
 				}
 			}
-			if(this.dataMiner !== null) this.player.coins.rate += this.rate;
+
+			if(this.dataMiner === null){
+				this.player.firewall[firewallID][['charges', 'max_charges', 'strength', 'regeneration'][firewallUpgradeID]] += firewallUpgradeID == 0 || firewallUpgradeID == 1 ? 5 : 1;
+			}else{
+				this.player.coins.rate += this.rate;
+			}
 
 			this.player.update();
 		}
@@ -78,7 +87,7 @@ class Firewall{
 		this.charge_cool = 0;
 		this.recoveryIn = 30;
 		this.is_hacked = false;
-		this.upgrades = [new Upgrade(player, null, true), new Upgrade(player, 6), new Upgrade(player, 10), new Upgrade(player, 3)]
+		this.upgrades = [new Upgrade(player, 0.5, true), new Upgrade(player, 6), new Upgrade(player, 10), new Upgrade(player, 3)]
 
 		this.interval = setInterval(() => this.runInterval(), 1000);
 	}
@@ -210,6 +219,10 @@ class Player{
 		}
 
 		switch(data.task){
+			case(102):
+				if(data.id == undefined || data.fid == undefined) break;
+				this.firewall[data.fid].upgrades[data.id].purchase(data.fid, data.id);
+				break;
 			case(103):
 				if(data.id == undefined) break;
 				this.market[data.id].purchase();
