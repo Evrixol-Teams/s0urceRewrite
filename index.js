@@ -9,21 +9,18 @@ const AdRemover = require('./utils/adRemover.js');
 const SocketIO = require('socket.io');
 const Express = require('express');
 const http = require('http');
-const readline = require('readline');
 
 class Upgrade{
 	/**
 	 * @param {Player} player
 	 * @param {Number} price 
-	 * @param {Number | null} priceIncrease 
 	 * @param {Boolean} fixedPrice 
 	 * @param {Number | null} dataMiner 
 	 */
-	constructor(player, price, priceIncrease, fixedPrice = false, dataMiner = null){
+	constructor(player, price, fixedPrice = false, dataMiner = null){
 		this.player = player;
 		this.originalPrice = price;
 		this.price = this.originalPrice;
-		this.priceIncrease = priceIncrease;
 		this.fixedPrice = fixedPrice;
 		this.dataMiner = dataMiner;
 
@@ -51,7 +48,14 @@ class Upgrade{
 			this.price;
 			this.amount++;
 
-			if(!this.fixedPrice) this.price += this.priceIncrease;
+			if(!this.fixedPrice){
+				if(this.dataMiner === null){
+					this.price += this.price;
+				}else{
+					var A = (this.originalPrice * Math.pow(1.1, 1));
+					this.price = (A * Math.pow(1.1, this.amount - 1));
+				}
+			}
 			if(this.dataMiner !== null) this.player.coins.rate += this.rate;
 
 			this.player.update();
@@ -74,7 +78,7 @@ class Firewall{
 		this.charge_cool = 0;
 		this.recoveryIn = 30;
 		this.is_hacked = false;
-		this.upgrades = [new Upgrade(player, 0.5, null, true), new Upgrade(player, 6, 6), new Upgrade(player, 10, 10), new Upgrade(player, 3, 3)]
+		this.upgrades = [new Upgrade(player, null, true), new Upgrade(player, 6), new Upgrade(player, 10), new Upgrade(player, 3)]
 
 		this.interval = setInterval(() => this.runInterval(), 1000);
 	}
@@ -138,12 +142,12 @@ class Player{
 		this.coins = { value: 0.1500, rate: 0.0000 };
 		this.firewall = [new Firewall(this), new Firewall(this), new Firewall(this)]
 		this.market = [
-			new Upgrade(this, 0.006, 0.006, false, 0),
-			new Upgrade(this, 0.25, 0.25, false, 1),
-			new Upgrade(this, 18.4, 18.4, false, 2),
-			new Upgrade(this, 512, 512, false, 3),
-			new Upgrade(this, 3072, 3072, false, 4),
-			new Upgrade(this, 25600, 25600, false, 5)
+			new Upgrade(this, 0.006, false, 0),
+			new Upgrade(this, 0.25, false, 1),
+			new Upgrade(this, 18.4, false, 2),
+			new Upgrade(this, 512, false, 3),
+			new Upgrade(this, 3072, false, 4),
+			new Upgrade(this, 25600, false, 5)
 		]
 		this.market[0].amount++;
 
