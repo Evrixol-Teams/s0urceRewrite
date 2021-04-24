@@ -1,267 +1,294 @@
 /*
 here goes our attempt to revive the s0urce.io game
 with a private server and a custom client
-
-
-hey nicejs, are you still active?
-I guess not
-
-
-ok instead of burp im just gonna log websocket through hijacking the websocket module on browsers
-check utils/websocket-scout.js
-~Yours Truly#4285
-
-and what about the playerdebugmode script or chrome developer tools?
-
-I guess those would work, but it's probably harder to find it on developer tools?
-btw I found mainPackage info https://replit.com/@s0urceiorw/s0urce-server#client/js/clientD-fix.js:1729
-
 */
 
+const config = require('./settings');
+const AdRemover = require('./utils/adRemover.js');
 
-const settings = require('./settings.js')
-const express = require('express');
-const cookieParser = require('cookie-parser');
-const bodyParser = require('body-parser');
-const Database = require("@replit/database");
-var httpServer = require('http').createServer;
-const utils = {
-  startPacket: require('./utils/startpacket.js'),
-  playerCreator: require('./utils/playercreator.js'),
-  taskmanager: require('./utils/taskmgr.js'),
-  adRemover: require('./utils/adRemover.js')
-}
-var players = {
-  "1": utils.playerCreator('Server', 'IN-PROGRESS', 5, 6969, "Welcome to the S0urce.io Private Server 0.1 Alpha!", 69)
-};
+const SocketIO = require('socket.io');
+const Express = require('express');
+const http = require('http');
+const readline = require('readline');
 
-var socketlist = {};
+class Upgrade{
+	/**
+	 * @param {Player} player
+	 * @param {Number} price 
+	 * @param {Number | null} priceIncrease 
+	 * @param {Boolean} fixedPrice 
+	 * @param {Number | null} dataMiner 
+	 */
+	constructor(player, price, priceIncrease, fixedPrice = false, dataMiner = null){
+		this.player = player;
+		this.originalPrice = price;
+		this.price = this.originalPrice;
+		this.priceIncrease = priceIncrease;
+		this.fixedPrice = fixedPrice;
+		this.dataMiner = dataMiner;
 
-const app = express();
-app.use(cookieParser());
+		this.amount = 0;
+	}
 
-server = httpServer(app);
+	get rate(){
+		if(this.dataMiner !== null) return [0.0002, 0.0075, 0.0390, 1.0700, 6.4000, 53.330][this.dataMiner];
+		return 0;
+	}
 
-var io = require('socket.io')(server)
+	getData(){
+		var data = {
+			amount: this.amount,
+			f_cost: this.price
+		}
+		if(!this.fixedPrice) data.s_cost = this.originalPrice;
+		if(this.dataMiner) data.rate = this.rate;
+		return data;
+	}
 
-app.get('/', (req, res) => {
-  res.sendFile(__dirname + "/client/index.html");
-});
+	purchase(){
+		if(this.player.coins.value >= this.price){
+			this.player.coins.value -= this.price;
+			this.price;
+			this.amount++;
 
-////////////////////////////////////////////////////////////////////////////////////////////// admin panel
-/*
-app.use((req, res, next) => {
-  //get the token from the cookies
-  const authToken = req.cookies['AuthToken'];
-  if (!authToken) return console.error('invalid authentication token X')
-  //inject the user to the request
-  if (authToken) {req.user = authTokens[authToken];}
-  next();
-})
-const users = [
-  // This user is added to the array to avoid creating a new user on each restart
-  {
-    username: 'johndoe@email.com',
-    // This is the SHA256 hash for value of `password`
-    password: 'XohImNooBHFR0OVvjcYpJ3NgPQ1qq73WKhHvch0VQtg='
-  }
-];
-const crypto = require('crypto');
+			if(!this.fixedPrice) this.price += this.priceIncrease;
+			if(this.dataMiner !== null) this.player.coins.rate += this.rate;
 
-const getHashedPassword = (password) => {
-  const sha256 = crypto.createHash('sha256');
-  const hash = sha256.update(password).digest('base64');
-  return hash;
-}
-const generateAuthToken = () => {
-    return crypto.randomBytes(30).toString('hex');
-}
-const authTokens = {};
-
-app.get('/admin', (req, res) => {
-  res.sendFile(__dirname+"/admin/adminlogin.html");
-})
-
-app.post('/admin/login', (req, res) => {
-  const { email, password } = req.body
-  const hashedPassword = getHashedPassword(password);
-
-  const user = users.find(u => {
-    return u.email === email && hashedPassword === u.password
-  });
-
-  if (user) {
-    const authToken = generateAuthToken();
-    // store authentication token
-    authtokens[authToken] = user;
-    //setting the auth token in cookies
-    res.cookie('AuthToken', authToken);
-    //redirect the user to the admin panel
-    res.redirect('/panel')
-  } else {
-    res.redirect('/admin/login')
-  }
-})
-
-app.get('/protected', (req, res) =>{
-  if (req.user) {
-    res.sendfile(__dirname+"/admin/adminpanel.html");
-  } else {
-    res.redirect('/')
-  }
-});
-
-*/
-//////////////////////////////////////////////////////////////////////////////////////////////// end admin
-
-
-//added try catch logic >:D
-io.on('connection', (socket) => {
-try {
-  socket.pkgEmit = pkgEmitCreate(socket);
-  // In case of 'signIn' event trigger not having appropriate name data, catch exception & set username to 'AnonXXX'.
-  socket.on('signIn', (data) => {
-    try {
-      var name = data.name;
-    } catch (err) {
-      var name = "Anon" + (Math.floor(Math.random() * 999) + 1).toString()
-    }
-    socket.player = {
-      name: name,
-      rank: 0,
-      level: 1,
-      comms: {
-        first: ".........",
-        second: "........."
-      }
-    }
-    socketlist[name] = socket;
-
-    addPlayer(utils.playerCreator(
-      name,
-      socket.id,
-      socket.player.rank,
-      socket.player.level,
-      "",
-      Object.keys(players).length, [socket.player.comms.first, socket.player.comms.second]
-    ), socket.id)
-
-    socket.emit('prepareClient', socket.id);
-    utils.startPacket(socket);
-  })
-  socket.on('disconnect', () => {
-    socket.disconnect(); // to prevent fake disconnects
-    delete socketlist[socket.id];
-    delete players[socket.id];
-  })
-  const firewall_ports = {
-    0: 'A',
-    1: 'B',
-    2: 'C'
-  };
-  socket.on('playerRequest', (data) => {
-    try{
-    console.log(data);
-    switch (data.task) {
-      case 666: // restart
-        socket.player = {
-          name: socket.player.name,
-          rank: 0,
-          level: 1,
-          comms: {
-            first: ".........",
-            second: "........."
-          }
-        }
-        socketlist[socket.player.name] = socket;
-
-        addPlayer(utils.playerCreator(
-          socket.player.name,
-          socket.id,
-          socket.player.rank,
-          socket.player.level,
-          "",
-          Object.keys(players).length, [socket.player.comms.first, socket.player.comms.second]
-        ), socket.id)
-        break;
-      case 100:
-        port = firewall_ports[data.port];
-        console.log(`player with id ${socket.id} hacking player with id ${data.id} on port ${port}`);
-        //socket.emit()
-        ///////////////////////////////////////////////help what do i need to input to socket.emit
-        break;
-      case 103:
-        console.log("player with id " + socket.id + " is trying to buy something with id " + data.id)
-        break;
-      case 102:
-        port = firewall_ports[data.fid];
-        console.log("something shall be upgraded (thing " + data.id + ")at port " + port);
-        break;
-      case 777: // eg {"task":777,"word":"left"}
-        console.log("check word typed in cdm for player with id: " + socket.id)
-        break;
-      case 300: // send message eg {"task":300,"id":"player-id","message":"hi"}
-        io.to(data.id).emit('mainPackage', {
-          unique: [{
-            task: 2006,
-            id: socket.id,
-            name: socket.player.name,
-            message: data.message
-          }]
-        });
-        break;
-    }
-    }catch(err){
-      console.error(err);
-      socket.disconnect();
-    }
-  });
-} catch(err) {
-  console.error(err);
-  socket.disconnect();
-}
-});
-
-setInterval(() => {
-  for (var item in socketlist) {
-    socket = socketlist[item]
-    displayPlayers(socket);
-  }
-}, 4000)
-;
-function displayPlayers(socket) {
-  socket.emit('mainPackage', {
-    unique: [{
-      task: 2008,
-        data: Object.entries(players).map((x, y) => {
-          return x[1]
-        }),
-        topFive: [
-          utils.playerCreator('Server', 'IN-PROGRESS', 5, 6969, "Welcome to the S0urce.io Private Server 0.1 Alpha!", 69)
-        ]
-    }]
-  })
+			this.player.update();
+		}
+	}
 }
 
-function addPlayer(data, id) {
-  players[id] = data;
+class Firewall{
+	/**
+	 * @param {Player} player 
+	 */
+	constructor(player){
+		this.player = player;
+
+		this.charges = 10;
+		this.max_charges = 10;
+		this.strength = 0;
+		this.regeneration = 0;
+		this.nextRegenIn = 120;
+		this.charge_cool = 0;
+		this.recoveryIn = 30;
+		this.is_hacked = false;
+		this.upgrades = [new Upgrade(player, 0.5, null, true), new Upgrade(player, 6, 6), new Upgrade(player, 10, 10), new Upgrade(player, 3, 3)]
+
+		this.interval = setInterval(() => this.runInterval(), 1000);
+	}
+
+	runInterval(){
+		if(this.regeneration != 0){
+			this.nextRegenIn--;
+			if(this.nextRegenIn <= 0){
+				this.nextRegenIn = 120;
+				this.charges += this.regeneration;
+			}
+		}
+
+		if(this.is_hacked){
+			this.recoveryIn--;
+			if(this.recoveryIn <= 0){
+				this.is_hacked = false;
+				this.charges = this.max_charges;
+				this.nextRegenIn = 30;
+			}
+		}
+
+		if(this.charge_cool > 0) this.charge_cool--;
+	}
+
+	getData(){
+		var data = {
+			charges: this.charges,
+			max_charges: this.max_charges,
+			strength: this.strength,
+			regeneration: this.regeneration,
+			nextRegenIn: this.nextRegenIn,
+			charge_cool: this.charge_cool,
+			recoveryIn: this.recoveryIn,
+			is_hacked: this.is_hacked,
+			upgrades: { "0": this.upgrades[0].getData(), "1": this.upgrades[1].getData(), "2": this.upgrades[2].getData(), "3": this.upgrades[3].getData() }
+		}
+
+		return data;
+	}
 }
 
-function pkgEmitCreate(socket) {
-  return function pkgEmit(...data) {
-    socket.emit({
-      unique: data
-    });
-  }
+class Player{
+	/**
+	 * @param {Server} server
+	 * @param {SocketIO.Socket} socket 
+	 */
+	constructor(server, socket){
+		this.server = server;
+		this.socket = socket;
+		this.id = this.socket.id;
+
+		this.firstMessage = false;
+		this.username = null;
+		this.achievmentRank = 0;
+		this.comm = { first: '.........', second: '.........' };
+		this.country = 'kp';
+		this.description = 'no description';
+		this.level = 1;
+
+		this.coins = { value: 0.1500, rate: 0.0000 };
+		this.firewall = [new Firewall(this), new Firewall(this), new Firewall(this)]
+		this.market = [
+			new Upgrade(this, 0.006, 0.006, false, 0),
+			new Upgrade(this, 0.25, 0.25, false, 1),
+			new Upgrade(this, 18.4, 18.4, false, 2),
+			new Upgrade(this, 512, 512, false, 3),
+			new Upgrade(this, 3072, 3072, false, 4),
+			new Upgrade(this, 25600, 25600, false, 5)
+		]
+		this.market[0].amount++;
+
+		this.interval = setInterval(() => this.coins.value += this.coins.rate, 1000);
+	}
+
+	get ingame(){
+		return !(this.username == null);
+	}
+
+	/**
+	 * @param {Player} player 
+	 * @param {String} message 
+	 */
+	sendChatMessage(player, message){
+		var task = { task: 2006, id: player.id, name: player.username, message: message }
+		this.socket.emit('mainPackage', { unique: [task] });
+	}
+
+	update(){
+		var task2009 = { task: 2009, content: { id: this.id, level: this.level, achievmentRank: this.achievmentRank, desc: this.description, comm: this.comm, country: this.country } }
+		var task2010 = {
+			task: 2010,
+			data: {
+				coins: this.coins,
+				firewall: {
+					"0": this.firewall[0].getData(),
+					"1": this.firewall[1].getData(),
+					"2": this.firewall[2].getData(),
+				},
+				market: {
+					"0": this.market[0].getData(),
+					"1": this.market[1].getData(),
+					"2": this.market[2].getData(),
+					"3": this.market[3].getData(),
+					"4": this.market[4].getData(),
+					"5": this.market[5].getData()
+				}
+			}
+		}
+
+		this.socket.emit('mainPackage', { unique: [task2009, task2010] });
+	}
+
+	/**
+	 * @param {String} username 
+	 */
+	signIn(username){
+		this.username = username;
+		this.socket.emit('prepareClient', { id: this.id });
+		this.update();
+	}
+
+	playerRequest(data){
+		if(!data || !data.task) return;
+		if(!this.firstMessage){
+			this.firstMessage = true;
+			this.coins.rate = 0.0002;
+			this.update();
+		}
+
+		switch(data.task){
+			case(103):
+				if(data.id == undefined) break;
+				this.market[data.id].purchase();
+				break;
+			case(104):
+				if(data.desc == undefined) break;
+				this.description = data.desc;
+				this.update();
+				break;
+			case(300):
+				if(data.id == undefined || data.message == undefined) break;
+				var player = this.server.getPlayer(data.id);
+				if(player) player.sendChatMessage(this, data.message);
+				break;
+		}
+	}
 }
 
+class Server{
+	/**
+	 * 
+	 * @param {http.Server} httpServer 
+	 */
+	constructor(httpServer){
+		/** @type {SocketIO.Server}*/ this.io = SocketIO(httpServer, { transports: ['polling', 'websocket'], cors: { origin: 'http://s0urce.io', credentials: true } });
+		/** @type {Array<SocketIO.Socket>} */ this.sockets = [];
 
-// some crazy stuff going on with MIME so i changed the position
-app.use('/client', express.static(__dirname + "/client"));
-app.use('/ads', utils.adRemover);
+		setInterval(() => this.runInterval(), 4000);
+		this.io.on('connection', socket => {
+			console.log(`Connection from ${socket.id}`);
 
-server.listen(settings.port, () => {
-  console.log('server started');
-  console.log("execute code:")
-  console.log(process.stdin)
-});
+			socket.player = new Player(this, socket);
+			socket.on('signIn', data => socket.player.signIn(data.name));
+			socket.on('playerRequest', data => socket.player.playerRequest(data));
+			socket.on('disconnect', () => this.sockets = this.sockets.filter(s => s.id != socket.id));
+
+			this.sockets.push(socket);
+		});
+	}
+
+	/**
+	 * @returns {Array<Player>}
+	 */
+	getAllPlayers(){
+		return this.sockets.map(socket => socket.player);
+	}
+
+	getPlayer(id){
+		return this.getAllPlayers().filter(player => player.id == id)[0];
+	}
+
+	emitToAll(event, data){
+		this.sockets.filter(socket => socket.player.ingame).map(socket => socket.emit(event, data));
+	}
+
+	runInterval(){
+		var task = { task: 2008, data: [], topFive: [] };
+		var players = this.getAllPlayers().filter(player => player.ingame).sort((a, b) => a.level - b.level);
+
+		for(var i = 0; i < players.length; i++) task.data.push({
+			achievmentRank: players[i].achievmentRank,
+			comm: players[i].comm,
+			country: players[i].country,
+			desc: players[i].description,
+			id: players[i].id,
+			level: players[i].level,
+			name: players[i].username,
+			rank: i + 1
+		});
+		task.topFive = [...task.data].slice(0, 3);
+		
+		this.emitToAll('mainPackage', { unique: [task] });
+	}
+}
+
+(async () => {
+	const app = Express();
+	app.get('/', (req, res) => res.sendFile(__dirname + '/client/index.html'));
+	app.use('/client', Express.static(__dirname + '/client'));
+	app.use('/ads', AdRemover);
+
+	const httpServer = http.createServer(app);
+	const server = new Server(httpServer);
+
+	httpServer.listen(config.port, () => console.log('Server Started'));
+})();
