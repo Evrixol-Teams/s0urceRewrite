@@ -219,6 +219,31 @@ class Player{
 				this.description = data.desc;
 				this.update();
 				break;
+			case(105):
+				if(data.id == undefined) break;
+				var player = this.server.getPlayer(data.id);
+
+				if(player){
+					var task = {
+						task: 2007,
+						data: {
+							id: player.id,
+							name: player.username,
+							level: player.level,
+							desc: player.description,
+							comm: player.comm,
+							achievmentRank: player.achievmentRank,
+							country: player.country
+						}
+					};
+
+					this.socket.emit('mainPackage', { unique: [task] });
+				}else{
+					var task = { task: 2000, data: { type: 2 } };
+					this.socket.emit('mainPackage', { unique: [task] });
+				}
+
+				break;
 			case(300):
 				if(data.id == undefined || data.message == undefined) break;
 				var player = this.server.getPlayer(data.id);
