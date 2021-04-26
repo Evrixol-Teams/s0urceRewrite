@@ -2,6 +2,7 @@
 const Server = require('./Server');
 const Player = require('./Player');
 const Firewall = require('./Firewall');
+const HackingHandler = require('./HackingHandler');
 
 module.exports = class Upgrade{
     /**

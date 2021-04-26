@@ -2,6 +2,8 @@
 const Server = require('./Server');
 const Player = require('./Player');
 const Upgrade = require('./Upgrade');
+const HackingHandler = require('./HackingHandler');
+
 
 module.exports = class Firewall{
 	/**
@@ -24,7 +26,7 @@ module.exports = class Firewall{
 	}
 
 	runInterval(){
-		if(this.regeneration != 0){
+		if(this.regeneration != 0 && !this.is_hacked){
 			this.nextRegenIn--;
 			if(this.nextRegenIn <= 0){
 				this.nextRegenIn = 120;

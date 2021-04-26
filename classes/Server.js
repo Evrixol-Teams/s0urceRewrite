@@ -3,6 +3,7 @@ const SocketIO = require('socket.io');
 const Player = require('./Player');
 const Firewall = require('./Firewall');
 const Upgrade = require('./Upgrade');
+const HackingHandler = require('./HackingHandler');
 
 module.exports = class Server{
 	/**

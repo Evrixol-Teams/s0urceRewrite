@@ -2,6 +2,7 @@
 const Server = require('./Server');
 const Firewall = require('./Firewall');
 const Upgrade = require('./Upgrade');
+const HackingHandler = require('./HackingHandler');
 
 module.exports = class Player{
 	/**
@@ -14,22 +15,23 @@ module.exports = class Player{
 		this.id = this.socket.id;
 
 		this.firstMessage = false;
-		this.username = null;
+		/** @type {String | null} */ this.username = null;
 		this.achievmentRank = 0;
 		this.comm = { first: '.........', second: '.........' };
 		this.country = 'kp';
 		this.description = 'no description';
 		this.level = 1;
+		/** @type { HackingHandler | null } */ this.hackingHandler = null;
 
-		this.coins = { value: 0.1500, rate: 0.0000 };
+		this.coins = { value: 1500, rate: 0.0000 };
 		this.firewall = [new Firewall(this), new Firewall(this), new Firewall(this)]
 		this.market = [
-			new Upgrade(this, 0, 0.006,),
-			new Upgrade(this, 1, 0.25,),
-			new Upgrade(this, 2, 18.4,),
-			new Upgrade(this, 3, 512,),
-			new Upgrade(this, 4, 3072,),
-			new Upgrade(this, 5, 25600,)
+			new Upgrade(this, 0, 0.006),
+			new Upgrade(this, 1, 0.25),
+			new Upgrade(this, 2, 18.4),
+			new Upgrade(this, 3, 512),
+			new Upgrade(this, 4, 3072),
+			new Upgrade(this, 5, 25600)
 		]
 		this.market[0].amount++;
 
@@ -92,6 +94,16 @@ module.exports = class Player{
 		}
 
 		switch(data.task){
+			case(100):
+				if(data.id == undefined || data.port == undefined) break;
+				var player = this.server.getPlayer(data.id);
+				if(player && this.coins.value >= this.coins.rate * 20){
+					this.coins.value -= this.coins.rate * 20;
+					this.update();
+
+					this.hackingHandler = new HackingHandler(this, player, data.port);
+				}
+				break;
 			case(102):
 				if(data.id == undefined || data.fid == undefined) break;
 				this.firewall[data.fid].upgrades[data.id].purchase(data.fid, data.id);
@@ -134,6 +146,10 @@ module.exports = class Player{
 				if(data.id == undefined || data.message == undefined) break;
 				var player = this.server.getPlayer(data.id);
 				if(player) player.sendChatMessage(this, data.message);
+				break;
+			case(777):
+				if(data.word == undefined) break;
+				if(this.hackingHandler) this.hackingHandler.tryHackingWord(data.word);
 				break;
 		}
 	}
