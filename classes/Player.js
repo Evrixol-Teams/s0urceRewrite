@@ -14,16 +14,15 @@ module.exports = class Player{
 		this.socket = socket;
 		this.id = this.socket.id;
 
-		this.firstMessage = false;
 		/** @type {String | null} */ this.username = null;
 		this.achievmentRank = 0;
-		this.comm = { first: '.........', second: '.........' };
+		this.comm = ['.........', '.........'],
 		this.country = 'kp';
 		this.description = 'no description';
 		this.level = 1;
 		/** @type { HackingHandler | null } */ this.hackingHandler = null;
 
-		this.coins = { value: 1500, rate: 0.0000 };
+		this.coins = { value: 1500, rate: 0.0002 };
 		this.firewall = [new Firewall(this), new Firewall(this), new Firewall(this)]
 		this.market = [
 			new Upgrade(this, 0, 0.006),
@@ -36,6 +35,7 @@ module.exports = class Player{
 		this.market[0].amount++;
 
 		this.interval = setInterval(() => this.coins.value += this.coins.rate, 1000);
+		this.update();
 	}
 
 	get ingame(){
@@ -47,33 +47,32 @@ module.exports = class Player{
 	 * @param {String} message 
 	 */
 	sendChatMessage(player, message){
-		var task = { task: 2006, id: player.id, name: player.username, message: message }
-		this.socket.emit('mainPackage', { unique: [task] });
+		this.socket.emit('mainPackage', { unique: [{ task: 2006, id: player.id, name: player.username, message: message }] });
 	}
 
 	update(){
-		var task2009 = { task: 2009, content: { id: this.id, level: this.level, achievmentRank: this.achievmentRank, desc: this.description, comm: this.comm, country: this.country } }
-		var task2010 = {
-			task: 2010,
-			data: {
-				coins: this.coins,
-				firewall: {
-					"0": this.firewall[0].getData(),
-					"1": this.firewall[1].getData(),
-					"2": this.firewall[2].getData(),
-				},
-				market: {
-					"0": this.market[0].getData(),
-					"1": this.market[1].getData(),
-					"2": this.market[2].getData(),
-					"3": this.market[3].getData(),
-					"4": this.market[4].getData(),
-					"5": this.market[5].getData()
+		this.socket.emit('mainPackage', { unique: [
+			{ task: 2009, content: { id: this.id, level: this.level, achievmentRank: this.achievmentRank, desc: this.description, comm: { first: this.comm[0], second: this.comm[1] }, country: this.country }},
+			{
+				task: 2010,
+				data: {
+					coins: this.coins,
+					firewall: {
+						"0": this.firewall[0].getData(),
+						"1": this.firewall[1].getData(),
+						"2": this.firewall[2].getData(),
+					},
+					market: {
+						"0": this.market[0].getData(),
+						"1": this.market[1].getData(),
+						"2": this.market[2].getData(),
+						"3": this.market[3].getData(),
+						"4": this.market[4].getData(),
+						"5": this.market[5].getData()
+					}
 				}
 			}
-		}
-
-		this.socket.emit('mainPackage', { unique: [task2009, task2010] });
+		]});
 	}
 
 	/**
@@ -87,21 +86,21 @@ module.exports = class Player{
 
 	playerRequest(data){
 		if(!data || !data.task) return;
-		if(!this.firstMessage){
-			this.firstMessage = true;
-			this.coins.rate = 0.0002;
-			this.update();
-		}
 
 		switch(data.task){
 			case(100):
 				if(data.id == undefined || data.port == undefined) break;
 				var player = this.server.getPlayer(data.id);
 				if(player && this.coins.value >= this.coins.rate * 20){
-					this.coins.value -= this.coins.rate * 20;
-					this.update();
+					if(!player.firewall[data.port].is_hacked){
+						this.coins.value -= this.coins.rate * 20;
+						this.update();
 
-					this.hackingHandler = new HackingHandler(this, player, data.port);
+						if(this.hackingHandler) this.hackingHandler.finishHack(false);
+						this.hackingHandler = new HackingHandler(this, player, data.port);
+					}else{
+						this.socket.emit('mainPackage', { unique: [{ task: 2003, text: "This port has been closed. Try another", action: 0 }] });
+					}
 				}
 				break;
 			case(102):
@@ -122,25 +121,29 @@ module.exports = class Player{
 				var player = this.server.getPlayer(data.id);
 
 				if(player){
-					var task = {
+					this.socket.emit('mainPackage', { unique: [{
 						task: 2007,
 						data: {
 							id: player.id,
 							name: player.username,
 							level: player.level,
 							desc: player.description,
-							comm: player.comm,
+							comm: {
+								first: this.comm[0],
+								second: this.comm[1]
+							},
 							achievmentRank: player.achievmentRank,
 							country: player.country
 						}
-					};
-
-					this.socket.emit('mainPackage', { unique: [task] });
+					}] });
 				}else{
-					var task = { task: 2000, data: { type: 2 } };
-					this.socket.emit('mainPackage', { unique: [task] });
+					this.socket.emit('mainPackage', { unique: [{ task: 2000, data: { type: 2 } }] });
 				}
 
+				break;
+			case(106):
+				if(data.text == undefined) break;
+				this.hackingHandler.setHackingMessage(data.text);
 				break;
 			case(300):
 				if(data.id == undefined || data.message == undefined) break;
