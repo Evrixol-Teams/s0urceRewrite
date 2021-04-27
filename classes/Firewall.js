@@ -31,6 +31,8 @@ module.exports = class Firewall{
 			if(this.nextRegenIn <= 0){
 				this.nextRegenIn = 120;
 				this.charges += this.regeneration;
+
+				this.player.update();
 			}
 		}
 
@@ -39,11 +41,18 @@ module.exports = class Firewall{
 			if(this.recoveryIn <= 0){
 				this.is_hacked = false;
 				this.charges = this.max_charges;
-				this.nextRegenIn = 30;
+				this.recoveryIn = 30;
+
+				this.player.update();
 			}
 		}
 
-		if(this.charge_cool > 0) this.charge_cool--;
+		if(this.charge_cool > 0){
+			this.charge_cool--;
+			if(this.charge_cool <= 0){
+				this.player.update();
+			}
+		}
 	}
 
 	getData(){
