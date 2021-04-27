@@ -39,7 +39,7 @@ module.exports = class Player{
 	}
 
 	get ingame(){
-		return !(this.username == null);
+		return !(this.username === null);
 	}
 
 	/**

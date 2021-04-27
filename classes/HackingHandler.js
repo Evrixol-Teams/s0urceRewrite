@@ -34,7 +34,7 @@ module.exports = class HackingHandler{
     generateHackingWord(){
         this.hackingWordDifficulty = ['e', '', 'm', '', 'h'][this.firewall.strength];
         if(this.firewall.strength == 1) Math.random() < 0.5 ? 'e' : 'm';
-        if(this.firewall.strength == 2) Math.random() < 0.5 ? 'm' : 'd';
+        if(this.firewall.strength == 3) Math.random() < 0.5 ? 'm' : 'd';
         
         this.hackingWordIndex = Math.floor(Math.random() * imageToWord[this.hackingWordDifficulty].length);
         this.hackingWord = imageToWord[this.hackingWordDifficulty][this.hackingWordIndex];
