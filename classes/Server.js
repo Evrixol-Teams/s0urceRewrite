@@ -44,7 +44,7 @@ module.exports = class Server{
 
 	runInterval(){
 		var task = { task: 2008, data: [], topFive: [] };
-		var players = this.getAllPlayers().filter(player => player.ingame).sort((a, b) => a.level - b.level);
+		var players = this.getAllPlayers().filter(player => player.ingame).sort((a, b) => b.level - a.level);
 
 		for(var i = 0; i < players.length; i++) task.data.push({
 			achievmentRank: players[i].achievmentRank,
