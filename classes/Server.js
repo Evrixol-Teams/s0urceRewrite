@@ -21,7 +21,7 @@ module.exports = class Server{
 			socket.player = new Player(this, socket);
 			socket.on('signIn', data => socket.player.signIn(data.name));
 			socket.on('playerRequest', data => socket.player.playerRequest(data));
-			socket.on('disconnect', () => this.sockets = this.sockets.filter(s => s.id != socket.id));
+			socket.on('disconnect', () => socket.player.disconnect());
 
 			this.sockets.push(socket);
 		});
