@@ -43,6 +43,10 @@ module.exports = class Player{
 		return !(this.username === null);
 	}
 
+	set ingame(value){
+		this.username = value ? value : null;
+	}
+
 	/**
 	 * @param {Player} player 
 	 * @param {String} message 
