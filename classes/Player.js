@@ -91,16 +91,20 @@ module.exports = class Player{
 			case(100):
 				if(data.id == undefined || data.port == undefined) break;
 				var player = this.server.getPlayer(data.id);
-				if(player && this.coins.value >= this.coins.rate * 20){
-					if(!player.firewall[data.port].is_hacked){
-						this.coins.value -= this.coins.rate * 20;
-						this.update();
+				if(player){
+					if(this.coins.value >= this.coins.rate * 20){
+						if(!player.firewall[data.port].is_hacked){
+							this.coins.value -= this.coins.rate * 20;
+							this.update();
 
-						if(this.hackingHandler) this.hackingHandler.finishHack(false);
-						this.hackingHandler = new HackingHandler(this, player, data.port);
-					}else{
-						this.socket.emit('mainPackage', { unique: [{ task: 2003, text: "This port has been closed. Try another", action: 0 }] });
+							if(this.hackingHandler) this.hackingHandler.finishHack(false);
+							this.hackingHandler = new HackingHandler(this, player, data.port);
+						}else{
+							this.socket.emit('mainPackage', { unique: [{ task: 2003, text: "This port has been closed. Try another", action: 0 }] });
+						}
 					}
+				}else{
+					this.socket.emit('mainPackage', { unique: [{ task: 2000, data: { type: 2 } }] });
 				}
 				break;
 			case(102):
