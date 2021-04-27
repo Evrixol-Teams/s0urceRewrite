@@ -48,7 +48,10 @@ module.exports = class Server{
 
 		for(var i = 0; i < players.length; i++) task.data.push({
 			achievmentRank: players[i].achievmentRank,
-			comm: players[i].comm,
+			comm: {
+				first: players[i].comm[0],
+				second: players[i].comm[1]
+			},
 			country: players[i].country,
 			desc: players[i].description,
 			id: players[i].id,
