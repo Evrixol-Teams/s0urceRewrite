@@ -52,18 +52,50 @@ module.exports = class Upgrade{
         /** @type {Player} */ var player = this.type == Player ? this.parent : this.parent.player;
 
         if(player.coins.value >= this.price){
-            player.coins.value -= this.price;
-            this.amount++;
+            var success = false;
 
             if(this.type == Player){
 				this.price = ((this.originalPrice * Math.pow(1.1, 1)) * Math.pow(1.1, this.amount - 1));
                 player.coins.rate += this.rate;
+                success = true;
             }else{
                 this.price += this.price;
-                this.parent[['charges', 'max_charges', 'strength', 'regeneration'][this.index]] += this.index == 0 || this.index == 1 ? 5 : 1;
+                switch(this.index){
+                    case(0):
+                        if(this.parent.charge_cool <= 0 && !this.parent.is_hacked){
+                            this.parent.charge_cool = 30;
+                            this.parent.charges += 5;
+                            if(this.parent.charges >= this.parent.max_charges) this.parent.charges = this.parent.max_charges;
+                            success = true;
+                        }
+                        break;
+                    case(1):
+                        if(this.amount < 4){
+                            this.parent.max_charges += 5;
+                            success = true;
+                        }
+                        break;
+                    case(2):
+                        if(this.amount < 4){
+                            this.parent.strength++;
+                            success = true;
+                        }
+                        break;
+                    case(3):
+                        if(this.amount < 10){
+                            this.parent.regeneration++;
+                            success = true;
+                        }
+                        break;
+                }
             }
 
-            player.update();
+            if(success){
+                player.coins.value -= this.price;
+                this.amount++;
+
+                player.update();
+            }
         }
     }
 }
