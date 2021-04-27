@@ -23,7 +23,7 @@ module.exports = class Player{
 		/** @type { HackingHandler | null } */ this.hackingHandler = null;
 		/** @type { Array<HackingHandler> } */ this.hackers = null;
 
-		this.coins = { value: 1500, rate: 0.0002 };
+		this.coins = { value: 0.1500, rate: 0.0002 };
 		this.firewall = [new Firewall(this), new Firewall(this), new Firewall(this)]
 		this.market = [
 			new Upgrade(this, 0, 0.006),
