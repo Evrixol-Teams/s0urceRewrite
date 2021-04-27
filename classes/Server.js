@@ -5,6 +5,9 @@ const Firewall = require('./Firewall');
 const Upgrade = require('./Upgrade');
 const HackingHandler = require('./HackingHandler');
 
+const changelog = require('../utils/changelog.json');
+const updates = require('../utils/updates.json');
+
 module.exports = class Server{
 	/**
 	 * 

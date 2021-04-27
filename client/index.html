@@ -33,21 +33,15 @@
 		
 		<link href="https://fonts.googleapis.com/css?family=PT+Mono" rel="stylesheet">
 
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 		<script>
-      function displayMessage() {
-        alert('Hello.');
-        alert('Its nicejs here.');
-        alert('So...');
-        alert('I got my discord account banned yesterday (01/09/2021)');
-        alert('I\'m trying to create a new account');
-        alert('If its an IP-ban then goodbye');
-        alert('but...');
-        alert('If not... i will add my account here');
-        alert('While this the People on the Team Will Continue Writing Code On SourceRW.');
-        alert('Thanks For Reading -NiceJSProgrammer#4774');
-        alert('Seen -Yours Truly#4285');
-      }
-    </script>
+			$(document).ready(() => {
+				var updates = $('.updates');
+				var changelog = $('.changelog');
+				$.getJSON('client/js/updates.json').then(json => json.forEach(update => updates.append(`<div class="login-element-news"><div class="news-date">${update.date}</div><p style="font-size: 24px;">${update.title}</p><p>${update.description}</p><div class="news-date">written by: <b>${update.writtenBy}</b></div></div>`)));
+				$.getJSON('client/js/changelog.json').then(json => json.forEach(change => changelog.append(`<div class="login-element-news"><div class="news-date">${change.date} - ${change.version}</div><ul class="news-ul">${change.changes.map(c => `<li>${c}</li>`)}</ul></div>`)));
+			});
+		</script>
 	</head>
 
 	<body>
@@ -67,7 +61,7 @@
 				<div style="width: 100%; text-align: center">
 					<a href="http://s0urce.io/"><img src="../client/img/logo.png" style="margin-top: 20px"></a>
 				</div>
-				<div style="position: absolute; top: 95px; left: 625px">Beta 2.2 (Private Server Alpha 0.0.1)</div>
+				<div style="position: absolute; top: 95px; left: 625px">Beta 2.2 (Private Server 1.0.0)</div>
 			
 				<div class="login-element" style="width: 280px; left: 356px; top: 150px; text-align: center">
 					
@@ -101,84 +95,8 @@
 							
 							<br><br>
 							<b>Changelog</b>
+							<div class="changelog">
 
-							<div class="login-element-news">
-								<div class="news-date">7 July - Beta 2.2</div>
-								<ul class="news-ul">
-									<li>Security update</li>
-								</ul>
-							</div>
-							
-							<div class="login-element-news">
-								<div class="news-date">4 July - Beta 2.1</div>
-								<ul class="news-ul">
-									<li>Small changes</li>
-								</ul>
-							</div>
-							
-							<div class="login-element-news">
-								<div class="news-date">30 June - Beta 2.1</div>
-								<ul class="news-ul">
-									<li>Switched to the old mini game</li>
-								</ul>
-							</div>
-							
-							<div class="login-element-news">
-								<div class="news-date">22 June - Beta 2.0</div>
-								<ul class="news-ul">
-									<li>Switched to a better server</li>
-									<li>New logo</li>
-									<li>Balanced firewall upgrades</li>
-								</ul>
-							</div>
-							
-							<div class="login-element-news">
-								<div class="news-date">16 June - Beta 1.5</div>
-								<ul class="news-ul">
-									<li>Self hack disabled</li>
-									<li>Max charges are now limited to 50</li>
-									<li>Name length fix</li>
-								</ul>
-							</div>
-							
-							<div class="login-element-news">
-								<div class="news-date">15th June - Beta 1.4</div>
-								<ul class="news-ul">
-									<li>Flags fixed</li>
-									<li>Firewall balanced</li>
-								</ul>
-							</div>
-							
-							<div class="login-element-news">
-								<div class="news-date">11th June - Beta 1.3</div>
-								<ul class="news-ul">
-									<li>You can now chat with other players</li>
-									<li>New rank system</li>
-								</ul>
-							</div>
-							
-							<div class="login-element-news">
-								<div class="news-date">9th June - Beta 1.2</div>
-								<ul class="news-ul">
-									<li>New chat system added</li>
-									<li>Hack back other players by clicking on their name in the log</li>
-								</ul>
-							</div>
-							
-							<div class="login-element-news">
-								<div class="news-date">8th June - Beta 1.1</div>
-								<ul class="news-ul">
-									<li>Added sounds</li>
-									<li>Added flags next to player names</li>
-									<li>Balanced rates of miners</li>
-								</ul>
-							</div>
-							
-							<div class="login-element-news">
-								<div class="news-date">7th June - Beta 1.0</div>
-								<ul class="news-ul">
-									<li>s0urce.io is online!</li>
-								</ul>
 							</div>
 						</div>
 					</div>
@@ -194,40 +112,8 @@
 							
 							<br><br>
 							<b>Updates</b>
-              <div class="login-element-news">
-								<div class="news-date">13th January 2021</div>
-								<p style="font-size: 24px;">F</p>
-                <p>
-                  rip bruh
-                </p>
-                <div class="news-date">written by: <b>NanderTGA#0367</b></div>
-							</div>
+							<div class="updates">
 
-              <div class="login-element-news">
-								<div class="news-date">13th January 2021</div>
-								<p style="font-size: 24px;">Bruh</p>
-                <p>
-                  Got my new account disabled again so i think its an IP-ban
-                </p>
-                <div class="news-date">written by: <b>NiceJSProgrammer#4774</b></div>
-							</div>
-
-							<div class="login-element-news">
-								<div class="news-date">13th January 2021</div>
-								<p style="font-size: 24px;">Got a new account</p>
-                <p>Its nicejs here, so apparently my account was not deleted but it was just disabled, so it was not an IP-ban and i could make a new one
-                  Here is the username: TheRealNiceJS#4443
-                  (btw i was running out of ideas for usernames xD)
-                </p>
-                <div class="news-date">written by: <b>NiceJSProgrammer#4774</b></div>
-							</div>
-
-							<div class="login-element-news">
-								<div class="news-date">12th January 2021</div>
-								Unfortunately, Nicejs' discord account got banned a few days ago, wich I discovered when I opened the rewrite. His account got banned on January 9th. You can display his original message by clicking <button class="button" onclick="displayMessage()">here</button>
-                <br>
-                <b style="font-size: 72px">F</b>
-                <div class="news-date">written by: <b>NanderTGA#0367</b></div>
 							</div>
 						</div>
 					</div>
@@ -1150,7 +1036,6 @@
 		
 		<!--Script-->
     <script src="/client/js/extraTools.js"></script>
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 		<script type="text/javascript" src="/client/js/plugin-min.js"></script><!-- this script SHOULD be the socket.io                   wait what really-->
 		<script type="text/javascript" src="/client/js/clientD-fix.js"></script><!--clientD script main core file-->
 	</body>
