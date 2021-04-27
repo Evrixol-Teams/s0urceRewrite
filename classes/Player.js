@@ -21,6 +21,7 @@ module.exports = class Player{
 		this.description = 'no description';
 		this.level = 1;
 		/** @type { HackingHandler | null } */ this.hackingHandler = null;
+		/** @type { Array<HackingHandler> } */ this.hackers = null;
 
 		this.coins = { value: 1500, rate: 0.0002 };
 		this.firewall = [new Firewall(this), new Firewall(this), new Firewall(this)]
@@ -159,5 +160,10 @@ module.exports = class Player{
 				if(this.hackingHandler) this.hackingHandler.tryHackingWord(data.word);
 				break;
 		}
+	}
+
+	disconnect(){
+		this.server.sockets.filter(socket => socket.player.id != this.id);
+		this.ingame = false;
 	}
 }
