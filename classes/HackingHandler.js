@@ -44,30 +44,34 @@ module.exports = class HackingHandler{
      * @param {String} word 
      */
     tryHackingWord(word){
-        if(word == this.hackingWord){
-            this.firewall.charges--;
+        if(this.victim.ingame){
+            if(word == this.hackingWord){
+                this.firewall.charges--;
 
-            if(this.firewall.charges <= 0){
-                this.hackingWord = null;
-                this.hacker.socket.emit('mainPackage', { unique: [
-                    { task: 333, opt: 2 },
-                    { task: 2004, state: { charges: this.firewall.charges, max_charges: this.firewall.max_charges} }
-                ]});
+                if(this.firewall.charges <= 0){
+                    this.hackingWord = null;
+                    this.hacker.socket.emit('mainPackage', { unique: [
+                        { task: 333, opt: 2 },
+                        { task: 2004, state: { charges: this.firewall.charges, max_charges: this.firewall.max_charges} }
+                    ]});
 
-                this.finishHack(true);
+                    this.finishHack(true);
+                }else{
+                    this.generateHackingWord();
+
+                    this.hacker.socket.emit('mainPackage', { unique: [
+                        { task: 333, opt: 1, url: { t: this.hackingWordDifficulty, i: this.hackingWordIndex }},
+                        { task: 333, opt: 2 },
+                        { task: 2004, state: { charges: this.firewall.charges, max_charges: this.firewall.max_charges} }
+                    ]});
+
+                    this.victim.update();
+                }
             }else{
-                this.generateHackingWord();
-
-                this.hacker.socket.emit('mainPackage', { unique: [
-                    { task: 333, opt: 1, url: { t: this.hackingWordDifficulty, i: this.hackingWordIndex }},
-                    { task: 333, opt: 2 },
-                    { task: 2004, state: { charges: this.firewall.charges, max_charges: this.firewall.max_charges} }
-                ]});
-
-                this.victim.update();
+                this.hacker.socket.emit('mainPackage', { unique: [{ task: 333, opt: 0 }] });
             }
         }else{
-            this.hacker.socket.emit('mainPackage', { unique: [{ task: 333, opt: 0 }] });
+            this.hacker.socket.emit('mainPackage', { unique: [{ task: 2003, text: "The target has disconnected from the server.", action: 0 }] });
         }
     }
 
@@ -78,6 +82,7 @@ module.exports = class HackingHandler{
                 if(this.victim.coins.rate * 30 > hackedAmount) hackedAmount = this.victim.coins.rate * 30;
 
                 this.firewall.is_hacked = true;
+                this.victim.hackers.map(handler => handler.hackingWord = null);
                 this.victim.coins.value -= hackedAmount;
                 this.victim.socket.emit('mainPackage', { unique: [{ task: 2005, data: { port: this.firewallID, hacked: true } }]});
                 this.victim.update();
