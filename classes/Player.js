@@ -5,6 +5,8 @@ const Upgrade = require('./Upgrade');
 const HackingHandler = require('./HackingHandler');
 const DatabaseManager = require('./DatabaseManager');
 
+const shop = require('../client/json/shop.json');
+
 module.exports = class Player{
 	/**
 	 * @param {Server} server
@@ -24,16 +26,9 @@ module.exports = class Player{
 		/** @type { HackingHandler | null } */ this.hackingHandler = null;
 		/** @type { Array<HackingHandler> } */ this.hackers = null;
 
-		this.coins = { value: 0.1500, rate: 0.0002 };
+		this.coins = { value: 150000000000, rate: 0.0002 };
 		this.firewall = [new Firewall(this), new Firewall(this), new Firewall(this)]
-		this.market = [
-			new Upgrade(this, 0, 0.006),
-			new Upgrade(this, 1, 0.25),
-			new Upgrade(this, 2, 18.4),
-			new Upgrade(this, 3, 512),
-			new Upgrade(this, 4, 3072),
-			new Upgrade(this, 5, 25600)
-		]
+		this.market = shop.Market.map((miner, index, array) => new Upgrade(this, index, miner.price));
 		this.market[0].amount++;
 
 		this.interval = setInterval(() => this.coins.value += this.coins.rate, 1000);

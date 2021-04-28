@@ -92,10 +92,10 @@
         $scope.unlocked.firewall[key].state = true;
       } else {
         if (1 == e) {
-          $($(`#shop-${group.Market[key].name.toLowerCase().split(' ').join('-')}`).children().eq(0)).attr("src", `../client/img/icon-miner-${key + 1}.png`);
+          $($(`#shop-${group.Market[key].name.toLowerCase().split(' ').join('-')}`).children().eq(0)).attr("src", `../client/img/icon-miner-${group.Market[key].name.toLowerCase().split(' ').join('-')}.png`);
           $($(`#shop-${group.Market[key].name.toLowerCase().split(' ').join('-')}`).children().eq(1).children().eq(0)).text(group.Market[key].name);
           $($(`#shop-${group.Market[key].name.toLowerCase().split(' ').join('-')}-inv`).children().eq(0)).text(group.Market[key].name);
-          $($(`#shop-${group.Market[key].name.toLowerCase().split(' ').join('-')}-inv`).children().eq(1)).attr("src", `../client/img/icon-miner-${key + 1}.png`);
+          $($(`#shop-${group.Market[key].name.toLowerCase().split(' ').join('-')}-inv`).children().eq(1)).attr("src", `../client/img/icon-miner-${group.Market[key].name.toLowerCase().split(' ').join('-')}.png`);
           /** @type {boolean} */
           $scope.unlocked.market[key].state = true;
         }
@@ -1680,9 +1680,9 @@
             load("click");
             res.emit("playerRequest", {
               task : 103,
-              id : i
+              id : $(this).attr('data-id')
             });
-            close(`#shop-${createdGroup.Market[i].name.toLowerCase().split(' ').join('-')}-inv`);
+            close(`#shop-${createdGroup.Market[$(this).attr('data-id')].name.toLowerCase().split(' ').join('-')}-inv`);
           }
         });
       }

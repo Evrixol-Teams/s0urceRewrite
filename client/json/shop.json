@@ -33,36 +33,42 @@
     {
 		"name": "Data Miner",
 		"description": "Generates a small amount of BT Coins.",
+		"price": 0.006,
 		"rate": 0.0002
 	},
 
 	{
 		"name": "Advanced Miner",
 		"description": "The latest technology of miners, generating a lot more BT Coins.",
+		"price": 0.25,
 		"rate": 0.0075
 	},
 	
 	{
 		"name": "Mining Drill",
 		"description": "Drills deep into the ancient BT Coin chambers and transports them right to your computer.",
+		"price": 18.4,
 		"rate": 0.039
 	},
 	
 	{
 		"name": "Data Center",
 		"description": "An entire hall of advanced BT Coin Miners.",
+		"price": 512,
 		"rate": 1.07
 	},
 	
 	{
 		"name": "Botnet",
 		"description": "Infected computers all around the world that mine BT Coins for you.",
+		"price": 3072,
 		"rate": 6.4
 	},
 	
 	{
 		"name": "Quantum Server",
 		"description": "Energy is extracted from the universe and converted by enormous pressure into the purest BT Coins.",
+		"price": 25600,
 		"rate": 53.33
 	}
 ]
