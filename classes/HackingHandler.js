@@ -2,6 +2,7 @@ const Server = require('./Server');
 const Player = require('./Player');
 const Firewall = require('./Firewall');
 const Upgrade = require('./Upgrade');
+const DatabaseManager = require('./DatabaseManager');
 
 const imageToWord = require('../utils/imageToWord.json');
 

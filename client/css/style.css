@@ -408,7 +408,8 @@ a:hover {
 .input-form-wrapper {
 	display: inline-block;
 	padding: 2px 4px;
-	border: 1px solid #bfcfd2
+	border: 1px solid #bfcfd2;
+    background-color: #0b0b0c;
 }
 
 .hacked-form {

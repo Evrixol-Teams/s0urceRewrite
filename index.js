@@ -11,6 +11,7 @@ const Player = require('./classes/Player');
 const Firewall = require('./classes/Firewall');
 const Upgrade = require('./classes/Upgrade');
 const HackingHandler = require('./classes/HackingHandler');
+const DatabaseManager = require('./classes/DatabaseManager');
 
 const Express = require('express');
 const http = require('http');

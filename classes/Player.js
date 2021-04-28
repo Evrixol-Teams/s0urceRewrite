@@ -3,6 +3,7 @@ const Server = require('./Server');
 const Firewall = require('./Firewall');
 const Upgrade = require('./Upgrade');
 const HackingHandler = require('./HackingHandler');
+const DatabaseManager = require('./DatabaseManager');
 
 module.exports = class Player{
 	/**
@@ -82,11 +83,33 @@ module.exports = class Player{
 
 	/**
 	 * @param {String} username 
+	 * @param {String} password
+	 * @param {Boolean} register
 	 */
-	signIn(username){
-		this.username = username;
-		this.socket.emit('prepareClient', { id: this.id });
-		this.update();
+	signIn(username, password, register){
+		if(username == undefined || password == undefined || username == '' || password == ''){
+			this.socket.emit('alert', 'Invalid Uername/Password');
+		}else{
+			if(register){
+				if(this.server.databaseManager.userExists(username)){
+					this.socket.emit('alert', 'That Username is taken');
+				}else{
+					this.server.databaseManager.register(username, password);
+					this.username = username;
+					this.socket.emit('prepareClient', { id: this.id });
+					this.update();
+				}
+			}else{
+				var user = this.server.databaseManager.login(username, password);
+				if(user){
+					this.username = username;
+					this.socket.emit('prepareClient', { id: this.id });
+					this.update();
+				}else{
+					this.socket.emit('alert', 'Invalid Username/Pasword');
+				}
+			}
+		}
 	}
 
 	playerRequest(data){

@@ -65,12 +65,19 @@
 			
 				<div class="login-element" style="width: 280px; left: 356px; top: 150px; text-align: center">
 					
-					<form id="login-input-form" class="input-form-wrapper" onSubmit="return false;" style="background-color: #0b0b0c; font-size: 18px">
-						> <input type="text" class="input-form" id="login-input" autocomplete="off" spellcheck="false" maxlength="12" placeholder="Enter Name" style="width: 245px; height: 38px">
+					<form id="login-input-form" onSubmit="return false;" style="font-size: 18px">
+						<div class="input-form-wrapper">
+							> <input type="text" class="input-form" id="login-input" autocomplete="off" spellcheck="false" maxlength="12" placeholder="Username" style="width: 245px; height: 38px">
+						</div>
+						<div class="input-form-wrapper" style="margin-top: 10px;">
+							> <input type="password" class="input-form" id="password-input" autocomplete="off" spellcheck="false" placeholder="Password" style="width: 245px; height: 38px;">
+						</div>
 					</form>
 
 					<div id="login-play" class="button" style="margin-top: 10px; padding: 10px 110px 10px 110px; font-size: 18px; font-weight: bold">Login</div>
 					
+					<div id="register-play" class="button" style="margin-top: 10px; padding: 10px 93.795px 10px 93.795px; font-size: 18px; font-weight: bold">Register</div>
+
 					<div style="margin-top: 10px">
 						<span style="margin-right: 20px">
 							<input type="checkbox" id="checkbox-tutorial" name="turnoff" value="tutorial" checked><label for="checkbox-tutorial" class="tut-checkbox-text">Tutorial</label>

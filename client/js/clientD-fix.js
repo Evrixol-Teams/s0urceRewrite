@@ -555,9 +555,10 @@
     }
   }
   /**
+   * @param {Boolean} register
    * @return {undefined}
    */
-  function oldSection() {
+  function oldSection(register) {
     var value = extend("vid_adin_s0urce");
     if (value !== undefined) {
       /** @type {number} */
@@ -574,7 +575,7 @@
     if (null !== adjacentAllyOrSelf && 2 == i) {
       adjacentAllyOrSelf.startPreRoll();
     } else {
-      apply();
+      apply(register);
     }
   }
   /**
@@ -861,18 +862,18 @@
     $(".tool-type-img").attr("src", "../client/img/words/template.png");
   }
   /**
+   * @param {Boolean} register
    * @return {undefined}
    */
-  function apply() {
+  function apply(register) {
     options.name = $('input[id="login-input"]').val();
+    options.password = $('input[id="password-input"]').val();
     cb("username", options.name, 180);
-    if ("" == options.name) {
-      /** @type {string} */
-      options.name = "Anon" + g(1, 1E3);
-    }
     $("#window-my-playername").text(options.name);
     res.emit("signIn", {
-      name : options.name
+      name : options.name,
+      password : options.password,
+      register : register
     });
     open(0);
     if ($("#checkbox-tutorial").is(":checked")) {
@@ -1411,10 +1412,10 @@
       report("#topwindow-power");
     });
     $("#login-play").click(function() {
-      oldSection();
+      oldSection(false);
     });
-    $("#login-input-form").submit(function() {
-      oldSection();
+    $("#register-play").click(() => {
+      oldSection(true);
     });
     $("#targetmessage-input-form").submit(function() {
       sendMessage();
@@ -1720,6 +1721,9 @@
   };
   /** @type {!Array} */
   var args = ["window-computer", "window-miner", "window-shop", "window-tool", "window-list", "window-other", "window-log", "window-power", "window-settings", "window-chat", "window-rank"];
+  res.on('alert', message => {
+    alert(message);
+  });
   res.on("prepareClient", function(variationAttrs) {
     options.id = variationAttrs.id;
     $("#login-page").hide();
