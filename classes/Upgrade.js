@@ -3,6 +3,9 @@ const Server = require('./Server');
 const Player = require('./Player');
 const Firewall = require('./Firewall');
 const HackingHandler = require('./HackingHandler');
+const DatabaseManager = require('./DatabaseManager');
+
+const shop = require('../client/json/shop.json');
 
 module.exports = class Upgrade{
     /**
@@ -29,7 +32,7 @@ module.exports = class Upgrade{
 
     get rate(){
         if(this.type == Player){
-            return [0.0002, 0.0075, 0.0390, 1.0700, 6.4000, 53.330][this.index];
+            return shop.Market[this.index].rate;
         }else{
             return 0;
         }

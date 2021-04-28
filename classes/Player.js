@@ -3,6 +3,9 @@ const Server = require('./Server');
 const Firewall = require('./Firewall');
 const Upgrade = require('./Upgrade');
 const HackingHandler = require('./HackingHandler');
+const DatabaseManager = require('./DatabaseManager');
+
+const shop = require('../client/json/shop.json');
 
 module.exports = class Player{
 	/**
@@ -21,17 +24,11 @@ module.exports = class Player{
 		this.description = 'no description';
 		this.level = 1;
 		/** @type { HackingHandler | null } */ this.hackingHandler = null;
+		/** @type { Array<HackingHandler> } */ this.hackers = null;
 
-		this.coins = { value: 1500, rate: 0.0002 };
+		this.coins = { value: 150000000000, rate: 0.0002 };
 		this.firewall = [new Firewall(this), new Firewall(this), new Firewall(this)]
-		this.market = [
-			new Upgrade(this, 0, 0.006),
-			new Upgrade(this, 1, 0.25),
-			new Upgrade(this, 2, 18.4),
-			new Upgrade(this, 3, 512),
-			new Upgrade(this, 4, 3072),
-			new Upgrade(this, 5, 25600)
-		]
+		this.market = shop.Market.map((miner, index, array) => new Upgrade(this, index, miner.price));
 		this.market[0].amount++;
 
 		this.interval = setInterval(() => this.coins.value += this.coins.rate, 1000);
@@ -40,6 +37,10 @@ module.exports = class Player{
 
 	get ingame(){
 		return !(this.username === null);
+	}
+
+	set ingame(value){
+		this.username = value ? value : null;
 	}
 
 	/**
@@ -77,11 +78,33 @@ module.exports = class Player{
 
 	/**
 	 * @param {String} username 
+	 * @param {String} password
+	 * @param {Boolean} register
 	 */
-	signIn(username){
-		this.username = username;
-		this.socket.emit('prepareClient', { id: this.id });
-		this.update();
+	signIn(username, password, register){
+		if(username == undefined || password == undefined || username == '' || password == ''){
+			this.socket.emit('alert', 'Invalid Uername/Password');
+		}else{
+			if(register){
+				if(this.server.databaseManager.userExists(username)){
+					this.socket.emit('alert', 'That Username is taken');
+				}else{
+					this.server.databaseManager.register(username, password);
+					this.username = username;
+					this.socket.emit('prepareClient', { id: this.id });
+					this.update();
+				}
+			}else{
+				var user = this.server.databaseManager.login(username, password);
+				if(user){
+					this.username = username;
+					this.socket.emit('prepareClient', { id: this.id });
+					this.update();
+				}else{
+					this.socket.emit('alert', 'Invalid Username/Pasword');
+				}
+			}
+		}
 	}
 
 	playerRequest(data){
@@ -159,5 +182,10 @@ module.exports = class Player{
 				if(this.hackingHandler) this.hackingHandler.tryHackingWord(data.word);
 				break;
 		}
+	}
+
+	disconnect(){
+		this.server.sockets.filter(socket => socket.player.id != this.id);
+		this.ingame = false;
 	}
 }

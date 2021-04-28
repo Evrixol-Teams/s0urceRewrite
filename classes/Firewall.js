@@ -3,7 +3,7 @@ const Server = require('./Server');
 const Player = require('./Player');
 const Upgrade = require('./Upgrade');
 const HackingHandler = require('./HackingHandler');
-
+const DatabaseManager = require('./DatabaseManager');
 
 module.exports = class Firewall{
 	/**

@@ -71,7 +71,7 @@
    * @return {?}
    */
   function formatNumber(i, options) {
-    return 2 == options ? "Costs: <img src='../client/img/icon-bt.png' class='icon-small window-bt-icon'>" + ($scope.coins.rate * item.attackCostMult).toFixed(4) : null == group ? "No Description" : 0 == options && 1 == $scope.unlocked.firewall[i].state ? group.Firewall[i].desc : 1 == options && 1 == $scope.unlocked.market[i].state ? group.Market[i].desc : "Unlock by mining more BT coins.";
+    return 2 == options ? "Costs: <img src='../client/img/icon-bt.png' class='icon-small window-bt-icon'>" + ($scope.coins.rate * item.attackCostMult).toFixed(4) : null == group ? "No Description" : 0 == options && 1 == $scope.unlocked.firewall[i].state ? group.Firewall[i].desc : 1 == options && 1 == $scope.unlocked.market[i].state ? `${group.Market[i].description}<br><img src='../client/img/icon-bt.png' class='icon-small window-bt-icon'>${group.Market[i].rate}/s` : "Unlock by mining more BT coins.";
   }
   /**
    * @param {string} key
@@ -92,10 +92,10 @@
         $scope.unlocked.firewall[key].state = true;
       } else {
         if (1 == e) {
-          $($(group.Market[key].id).children().eq(0)).attr("src", group.Market[key].img);
-          $($(group.Market[key].id).children().eq(1).children().eq(0)).text(group.Market[key].title);
-          $($(group.Market[key].id + "-inv").children().eq(0)).text(group.Market[key].title);
-          $($(group.Market[key].id + "-inv").children().eq(1)).attr("src", group.Market[key].img);
+          $($(`#shop-${group.Market[key].name.toLowerCase().split(' ').join('-')}`).children().eq(0)).attr("src", `../client/img/icon-miner-${group.Market[key].name.toLowerCase().split(' ').join('-')}.png`);
+          $($(`#shop-${group.Market[key].name.toLowerCase().split(' ').join('-')}`).children().eq(1).children().eq(0)).text(group.Market[key].name);
+          $($(`#shop-${group.Market[key].name.toLowerCase().split(' ').join('-')}-inv`).children().eq(0)).text(group.Market[key].name);
+          $($(`#shop-${group.Market[key].name.toLowerCase().split(' ').join('-')}-inv`).children().eq(1)).attr("src", `../client/img/icon-miner-${group.Market[key].name.toLowerCase().split(' ').join('-')}.png`);
           /** @type {boolean} */
           $scope.unlocked.market[key].state = true;
         }
@@ -555,9 +555,10 @@
     }
   }
   /**
+   * @param {Boolean} register
    * @return {undefined}
    */
-  function oldSection() {
+  function oldSection(register) {
     var value = extend("vid_adin_s0urce");
     if (value !== undefined) {
       /** @type {number} */
@@ -574,7 +575,7 @@
     if (null !== adjacentAllyOrSelf && 2 == i) {
       adjacentAllyOrSelf.startPreRoll();
     } else {
-      apply();
+      apply(register);
     }
   }
   /**
@@ -861,18 +862,18 @@
     $(".tool-type-img").attr("src", "../client/img/words/template.png");
   }
   /**
+   * @param {Boolean} register
    * @return {undefined}
    */
-  function apply() {
+  function apply(register) {
     options.name = $('input[id="login-input"]').val();
+    options.password = $('input[id="password-input"]').val();
     cb("username", options.name, 180);
-    if ("" == options.name) {
-      /** @type {string} */
-      options.name = "Anon" + g(1, 1E3);
-    }
     $("#window-my-playername").text(options.name);
     res.emit("signIn", {
-      name : options.name
+      name : options.name,
+      password : options.password,
+      register : register
     });
     open(0);
     if ($("#checkbox-tutorial").is(":checked")) {
@@ -1268,25 +1269,7 @@
         name : "#shop-firewall-regen",
         state : false
       }],
-      market : [{
-        name : "#shop-basic-miner",
-        state : false
-      }, {
-        name : "#shop-advanced-miner",
-        state : false
-      }, {
-        name : "#shop-mining-drill",
-        state : false
-      }, {
-        name : "#shop-data-center",
-        state : false
-      }, {
-        name : "#shop-bot-net",
-        state : false
-      }, {
-        name : "#shop-quantum-server",
-        state : false
-      }]
+      market : []
     }
   };
   /** @type {!Array} */
@@ -1396,7 +1379,7 @@
       }
     });
     render();
-    setUp();
+    // setUp();
     $("#targetid-button").click(function() {
       find($('input[id="targetid-input"]').val());
     });
@@ -1411,10 +1394,10 @@
       report("#topwindow-power");
     });
     $("#login-play").click(function() {
-      oldSection();
+      oldSection(false);
     });
-    $("#login-input-form").submit(function() {
-      oldSection();
+    $("#register-play").click(() => {
+      oldSection(true);
     });
     $("#targetmessage-input-form").submit(function() {
       sendMessage();
@@ -1646,12 +1629,12 @@
         check(t);
       }
     });
-    $(".window-shop-element").hover(function() {
-      me.hoverInfo = $(this).attr("id");
-      $("#hoverinfo-name").html(formatNumber($(this).attr("data-id"), $(this).attr("data-type")));
+    $(document).on('mouseenter', '.window-shop-element', function(e){
+      me.hoverInfo = $(e.target).attr('id');
+      $("#hoverinfo-name").html(formatNumber($(e.target).attr("data-id"), $(e.target).attr("data-type")));
       $("#hoverinfo").show();
-    }, function() {
-      /** @type {null} */
+    });
+    $(document).on('mouseleave', '.window-shop-element', function(){
       me.hoverInfo = null;
       $("#hoverinfo").hide();
     });
@@ -1681,12 +1664,29 @@
       me.dragging = null;
     });
     dbgLog('Loading codeTemplate.json File')
-    $.getJSON("/client/js/codeTemplate.json", function(trackInfoUrl) {
+    $.getJSON("/client/json/codeTemplate.json", function(trackInfoUrl) {
       /** @type {!Object} */
       tagrules = trackInfoUrl;
     });
     dbgLog('Loading shop.json File...')
-    $.getJSON("/client/js/shop.json", function(createdGroup) {
+    $.getJSON("/client/json/shop.json", function(createdGroup) {
+      for(var i = 0; i < createdGroup.Market.length; i++){
+        $scope.unlocked.market.push({ name: `#shop-${createdGroup.Market[i].name.toLowerCase().split(' ').join('-')}`, state: false });
+
+        $(`#shop-${createdGroup.Market[i].name.toLowerCase().split(' ').join('-')}`).click(function(c) {
+          if ($scope.coins.value >= $(this).children().eq(1).children().eq(3).text()) {
+            resize(c.pageX, c.pageY, "+ " + $(this).children().eq(1).children().eq(0).text(), "#2d533f");
+            postLink();
+            load("click");
+            res.emit("playerRequest", {
+              task : 103,
+              id : $(this).attr('data-id')
+            });
+            close(`#shop-${createdGroup.Market[$(this).attr('data-id')].name.toLowerCase().split(' ').join('-')}-inv`);
+          }
+        });
+      }
+
       /** @type {string} */
       group = createdGroup;
       /** @type {number} */
@@ -1720,6 +1720,9 @@
   };
   /** @type {!Array} */
   var args = ["window-computer", "window-miner", "window-shop", "window-tool", "window-list", "window-other", "window-log", "window-power", "window-settings", "window-chat", "window-rank"];
+  res.on('alert', message => {
+    alert(message);
+  });
   res.on("prepareClient", function(variationAttrs) {
     options.id = variationAttrs.id;
     $("#login-page").hide();

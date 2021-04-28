@@ -3,17 +3,18 @@ here goes our attempt to revive the s0urce.io game
 with a private server and a custom client
 */
 
-const config = require('./settings');
-const AdRemover = require('./utils/adRemover.js');
+const Express = require('express');
+const http = require('http');
 
 const Server = require('./classes/Server');
 const Player = require('./classes/Player');
 const Firewall = require('./classes/Firewall');
 const Upgrade = require('./classes/Upgrade');
 const HackingHandler = require('./classes/HackingHandler');
+const DatabaseManager = require('./classes/DatabaseManager');
 
-const Express = require('express');
-const http = require('http');
+const config = require('./settings');
+const AdRemover = require('./utils/adRemover.js');
 
 (async () => {
 	const app = Express();
