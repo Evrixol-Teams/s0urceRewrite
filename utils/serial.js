@@ -37,7 +37,7 @@ function objToString(obj,checkClone){ //concept from object cloner
       newObj[a]=obj[a]; map=map1
     })
   }
-  recurse(obj,newObj,[]); var result=JSON.stringify(arr2)
+  recurse(obj,newObj,[]); var result=JSON.stringify(arr2,null,'   ')
   if(checkClone){return{clone:newObj,string:result}}return result
 }
 function stringToObj(string,obj){
