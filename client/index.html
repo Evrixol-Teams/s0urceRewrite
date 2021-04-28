@@ -39,7 +39,7 @@
 				var updates = $('.updates');
 				var changelog = $('.changelog');
 				$.getJSON('client/json/updates.json').then(json => json.forEach(update => updates.append(`<div class="login-element-news"><div class="news-date">${update.date}</div><p style="font-size: 24px;">${update.title}</p><p>${update.description}</p><div class="news-date">written by: <b>${update.writtenBy}</b></div></div>`)));
-				$.getJSON('client/json/changelog.json').then(json => json.forEach(change => changelog.append(`<div class="login-element-news"><div class="news-date">${change.date} - ${change.version}</div><ul class="news-ul">${change.changes.map(c => `<li>${c}</li>`)}</ul></div>`)));
+				$.getJSON('client/json/changelog.json').then(json => json.forEach(change => changelog.append(`<div class="login-element-news"><div class="news-date">${change.date} - ${change.version}</div><ul class="news-ul">${change.changes.map(c => `<li>${c}</li>`).join('')}</ul></div>`)));
 			
 				var minersInventoryLeft = $('.window-miner-list-left');
 				var minersInventoryRight = $('.window-miner-list-right');
@@ -89,7 +89,7 @@
 				<div style="width: 100%; text-align: center">
 					<a href="http://s0urce.io/"><img src="../client/img/logo.png" style="margin-top: 20px"></a>
 				</div>
-				<div style="position: absolute; top: 95px; left: 625px">Beta 2.2 (Private Server 1.0.0)</div>
+				<div style="position: absolute; top: 95px; left: 625px">Beta 2.2 (Private Server 1.1.0)</div>
 			
 				<div class="login-element" style="width: 280px; left: 356px; top: 150px; text-align: center">
 					
