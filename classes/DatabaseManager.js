@@ -6,7 +6,8 @@ const Player = require('./Player');
 const Firewall = require('./Firewall');
 const Upgrade = require('./Upgrade');
 const HackingHandler = require('./HackingHandler');
-const {objToString,stringToObj}=require('../utils/serial.js');
+
+const { objToString, stringToObj } = require('../utils/serial.js');
 
 module.exports = class DatabaseManager {
     constructor(){
@@ -51,6 +52,5 @@ module.exports = class DatabaseManager {
         var salt = Crypto.randomBytes(16).toString('hex');
         this.database.push({ username: username, password: this.hashPassword(password, salt), salt: salt, data: {} });
         fs.writeFileSync('utils/database.json', objToString(this.database)); 
-        //dw bruh, the indentation happens in https://github.com/BleaknessGit/s0urceRewrite/blob/inDev-Waffles/utils/serial.js#L40
     }
 }
