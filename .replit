@@ -1,0 +1,3 @@
+# `.replit` docs : https://docs.replit.com/repls/dot-replit
+run = "npm start"
+onBoot = "echo 'Booting repl...\nTo run use the run button or npm start"

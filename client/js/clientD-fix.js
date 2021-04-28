@@ -1744,7 +1744,7 @@
       } else {
         if (333 == object.unique[i].task) {
           if (0 == object.unique[i].opt) {
-            run();
+            run(); //accept typed word
           } else {
             if (1 == object.unique[i].opt) {
               change_it(object.unique[i]);
@@ -1756,10 +1756,10 @@
           }
         } else {
           let taskobject = {
-              2008: function(e) {
+              2008: function(e) { //leaderboard listing
                   each(object.unique[i])
               },
-              2009: function() {
+              2009: function() { //special request(not known yet)
                 process(object.unique[i]);
               },
               2006: function() {
@@ -1777,7 +1777,7 @@
               2007: function() {
                 fn(object.unique[i].data);
               },
-              2005: function() {
+              2005: function() { //client selecting a target?
                 setOptionsOnContainer(object.unique[i].data);
               },
               2E3: function() {
