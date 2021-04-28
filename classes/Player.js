@@ -24,7 +24,7 @@ module.exports = class Player{
 		this.description = 'no description';
 		this.level = 1;
 		/** @type { HackingHandler | null } */ this.hackingHandler = null;
-		/** @type { Array<HackingHandler> } */ this.hackers = null;
+		/** @type { Array<HackingHandler> } */ this.hackers = [];
 
 		this.coins = { value: 150000000000, rate: 0.0002 };
 		this.firewall = [new Firewall(this), new Firewall(this), new Firewall(this)]

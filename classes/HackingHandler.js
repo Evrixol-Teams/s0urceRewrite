@@ -5,6 +5,7 @@ const Upgrade = require('./Upgrade');
 const DatabaseManager = require('./DatabaseManager');
 
 const imageToWord = require('../utils/imageToWord.json');
+const ranks = require('../client/json/ranks.json');
 
 module.exports = class HackingHandler{
     /**
@@ -23,6 +24,7 @@ module.exports = class HackingHandler{
         /** @type {String} */ this.hackingWordDifficulty = null;
         this.hackFinished = false;
 
+        this.victim.hackers.push(this);
         this.generateHackingWord();
 
         this.victim.socket.emit('mainPackage', { unique: [{ task: 2000, data: { type: 0, id: this.hacker.id, name: this.hacker.username, port: ['A', 'B', 'C'][firewallID] } }] });
@@ -84,44 +86,18 @@ module.exports = class HackingHandler{
 
                 this.firewall.is_hacked = true;
                 this.victim.hackers.map(handler => handler.hackingWord = null);
+                this.victim.hackers = [];
                 this.victim.coins.value -= hackedAmount;
                 this.victim.socket.emit('mainPackage', { unique: [{ task: 2005, data: { port: this.firewallID, hacked: true } }]});
                 this.victim.update();
 
                 this.hacker.coins.value += hackedAmount;
                 this.hacker.level++;
-                switch(this.hacker.achievmentRank){
-                    case(0):
-                        if(this.hacker.level >= 10){
-                            this.hacker.achievmentRank++;
-                            this.hacker.socket.emit('mainPackage', { unique: [{ task: 3001, rank: this.hacker.achievmentRank }] });
-                        }
-                        break;
-                    case(1):
-                        if(this.hacker.level >= 30){
-                            this.hacker.achievmentRank++;
-                            this.hacker.socket.emit('mainPackage', { unique: [{ task: 3001, rank: this.hacker.achievmentRank }] });
-                        }
-                        break;
-                    case(2):
-                        if(this.hacker.level >= 100){
-                            this.hacker.achievmentRank++;
-                            this.hacker.socket.emit('mainPackage', { unique: [{ task: 3001, rank: this.hacker.achievmentRank }] });
-                        }
-                        break;
-                    case(3):
-                        if(this.hacker.level >= 250){
-                            this.hacker.achievmentRank++;
-                            this.hacker.socket.emit('mainPackage', { unique: [{ task: 3001, rank: this.hacker.achievmentRank }] });
-                        }
-                        break;
-                    case(4):
-                        if(this.hacker.level >= 500){
-                            this.hacker.achievmentRank++;
-                            this.hacker.socket.emit('mainPackage', { unique: [{ task: 3001, rank: this.hacker.achievmentRank }] });
-                        }
-                        break;
-
+                for(var i = 0; i < ranks.length; i++){
+                    if(ranks[i + 1] != undefined && this.hacker.achievmentRank == i && this.hacker.level >= ranks[i + 1].level){
+                        this.hacker.achievmentRank++;
+                        this.hacker.socket.emit('mainPackage', { unique: [{ task: 3001, rank: this.hacker.achievmentRank }] });
+                    }
                 }
                 this.hacker.socket.emit('mainPackage', { unique: [
                     {
@@ -136,6 +112,7 @@ module.exports = class HackingHandler{
                     }]});
                 this.hacker.update();
             }else{
+                this.victim.hackers = this.victim.hackers.filter(handler => handler.hacker.id != this.hacker.id);
                 this.victim.socket.emit('mainPackage', { unique: [{ task: 2005, data: { port: this.firewallID, hacked: false } }]});
             }
         }

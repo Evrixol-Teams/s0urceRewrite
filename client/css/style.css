@@ -1005,7 +1005,9 @@ a:hover {
 	padding-top: 5px;
 	border-radius: 2px;
 	text-align: center;
-	background-color: rgba(191, 207, 210, .1)
+	background-color: rgba(191, 207, 210, .1);
+	margin-right: 10px;
+	margin-top: 10px;
 }
 
 .rank-current {

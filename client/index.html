@@ -68,6 +68,19 @@
 						`);
 					}
 				});
+
+				var ranks = $('#window-rank-container');
+				$.getJSON('client/json/ranks.json').then(json => {
+					for(var i = 0; i < json.length; i++){
+						ranks.append(`
+							<div class="rank-element rank-current">
+								<img src="../client/img/icon-rank-${json[i].name.toLowerCase().split(' ').join('-')}.png" class="rank-img">
+								<div class="rank-name">${json[i].name}</div>
+								<div class="rank-description">Level ${json[i].level}</div>
+							</div>
+						`);
+					}
+				});
 			});
 		</script>
 	</head>
@@ -900,44 +913,7 @@
 						<img src="../client/img/icon-rank.png" class="icon-small window-title-icon">Rank <span class="window-close-style window-close"><img src="../client/img/icon-close.png" class="window-close-img"></span>
 					</div>
 					
-					<div class="window-content" id="window-rank-container" style="width: 390px; height: 285px">
-						
-						<div class="rank-element rank-current" style="margin-right: 10px">
-							<img src="../client/img/icon-rank-bronze.png" class="rank-img">
-							<div class="rank-name">Bronze</div>
-							<div class="rank-description">Level 1</div>
-						</div>
-						
-						<div class="rank-element" style="margin-right: 10px">
-							<img src="../client/img/icon-rank-silver.png" class="rank-img rank-img-locked">
-							<div class="rank-name rank-name-locked">Silver</div>
-							<div class="rank-description">Level 10</div>
-						</div>
-						
-						<div class="rank-element">
-							<img src="../client/img/icon-rank-gold.png" class="rank-img rank-img-locked">
-							<div class="rank-name rank-name-locked">Gold</div>
-							<div class="rank-description">Level 30</div>
-						</div>
-						
-						<div class="rank-element" style="margin-right: 10px; margin-top: 10px">
-							<img src="../client/img/icon-rank-platinum.png" class="rank-img rank-img-locked">
-							<div class="rank-name rank-name-locked">Platinum</div>
-							<div class="rank-description">Level 100</div>
-						</div>
-						
-						<div class="rank-element" style="margin-right: 10px; margin-top: 10px">
-							<img src="../client/img/icon-rank-diamond.png" class="rank-img rank-img-locked">
-							<div class="rank-name rank-name-locked">Diamond</div>
-							<div class="rank-description">Level 250</div>
-						</div>
-						
-						<div class="rank-element" style="margin-top: 10px">
-							<img src="../client/img/icon-rank-master.png" class="rank-img rank-img-locked">
-							<div class="rank-name rank-name-locked">Master</div>
-							<div class="rank-description">Level 500</div>
-						</div>
-					</div>
+					<div class="window-content" id="window-rank-container" style="display: inline-block; max-width: 390px; padding: 5px 10px 15px 20px;"></div>
 				</div>
 			
 			</div>

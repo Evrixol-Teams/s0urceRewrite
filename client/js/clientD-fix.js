@@ -630,7 +630,7 @@
    * @return {undefined}
    */
   function open(name) {
-    var e = keynames[name].toLowerCase();
+    var e = keynames[name].toLowerCase().split(' ').join('-');
     $(".my-player-rank-icon").attr("src", "../client/img/icon-rank-" + e + ".png");
     /** @type {string} */
     var a = "<div class='rank-popup'><img src='../client/img/icon-rank-" + e + ".png' class='rank-popup-img'><div class='rank-popup-new'>New Rank!</div><div class='rank-popup-name'>" + keynames[name] + "</div></div>";
@@ -1008,7 +1008,7 @@
     /** @type {string} */
     e = to;
     $("#other-player-flag").attr("class", "flag " + e.country);
-    $(".other-rank-icon").attr("src", "../client/img/icon-rank-" + keynames[e.achievmentRank].toLowerCase() + ".png");
+    $(".other-rank-icon").attr("src", "../client/img/icon-rank-" + keynames[e.achievmentRank].toLowerCase().split(' ').join('-') + ".png");
     $("#window-other-port1").toggleClass($("#window-other-port1").attr("class").split(" ")[1] + " window-other-attackbutton-default");
     $("#window-other-port2").toggleClass($("#window-other-port2").attr("class").split(" ")[1] + " window-other-attackbutton-default");
     $("#window-other-port3").toggleClass($("#window-other-port3").attr("class").split(" ")[1] + " window-other-attackbutton-default");
@@ -1110,21 +1110,21 @@
   function each(tx) {
     if (tx.topFive[0] !== undefined) {
       $("#leaderboard-first-name").text(tx.topFive[0].name);
-      $("#leaderboard-first-rank").attr("src", "../client/img/icon-rank-" + keynames[tx.topFive[0].achievmentRank].toLowerCase() + ".png");
+      $("#leaderboard-first-rank").attr("src", "../client/img/icon-rank-" + keynames[tx.topFive[0].achievmentRank].toLowerCase().split(' ').join('-') + ".png");
       if (null !== tx.topFive[0].country && "string" == typeof tx.topFive[0].country && tx.topFive[0].country.length < 3) {
         $("#leaderboard-first-country").attr("class", "flag " + tx.topFive[0].country);
       }
     }
     if (tx.topFive[1] !== undefined) {
       $("#leaderboard-second-name").text(tx.topFive[1].name);
-      $("#leaderboard-second-rank").attr("src", "../client/img/icon-rank-" + keynames[tx.topFive[1].achievmentRank].toLowerCase() + ".png");
+      $("#leaderboard-second-rank").attr("src", "../client/img/icon-rank-" + keynames[tx.topFive[1].achievmentRank].toLowerCase().split(' ').join('-') + ".png");
       if (null !== tx.topFive[1].country && "string" == typeof tx.topFive[0].country && tx.topFive[1].country.length < 3) {
         $("#leaderboard-second-country").attr("class", "flag " + tx.topFive[1].country);
       }
     }
     if (tx.topFive[2] !== undefined) {
       $("#leaderboard-third-name").text(tx.topFive[2].name);
-      $("#leaderboard-third-rank").attr("src", "../client/img/icon-rank-" + keynames[tx.topFive[2].achievmentRank].toLowerCase() + ".png");
+      $("#leaderboard-third-rank").attr("src", "../client/img/icon-rank-" + keynames[tx.topFive[2].achievmentRank].toLowerCase().split(' ').join('-') + ".png");
       if (null !== tx.topFive[2].country && "string" == typeof tx.topFive[2].country && tx.topFive[2].country.length < 3) {
         $("#leaderboard-third-country").attr("class", "flag " + tx.topFive[2].country);
       }
@@ -1140,7 +1140,7 @@
       /** @type {string} */
       var xml = "";
       /** @type {string} */
-      var x = "<img src='../client/img/icon-rank-" + keynames[tx.data[j].achievmentRank].toLowerCase() + ".png' class='icon-small icon-profile-rank'>";
+      var x = "<img src='../client/img/icon-rank-" + keynames[tx.data[j].achievmentRank].toLowerCase().split(' ').join('-') + ".png' class='icon-small icon-profile-rank'>";
       /** @type {string} */
       var l = "<span class='f16 window-list-table-flag'><span class='flag " + tx.data[j].country + "'></span></span>";
       if (tx.data[j].id == options.id) {
@@ -1273,7 +1273,7 @@
     }
   };
   /** @type {!Array} */
-  var keynames = ["Bronze", "Silver", "Gold", "Platinum", "Diamond", "Master"];
+  var keynames = [];
   var item = {
     attackCostMult : 5,
     chargeCostMult : 20
@@ -1678,7 +1678,7 @@
             resize(c.pageX, c.pageY, "+ " + $(this).children().eq(1).children().eq(0).text(), "#2d533f");
             postLink();
             load("click");
-            res.emit("playerRequest", {
+            res.emit("playerdbgLog('Loading shop.json File...')Request", {
               task : 103,
               id : $(this).attr('data-id')
             });
@@ -1694,6 +1694,10 @@
       for (; i < hood.length; i++) {
         get(hood[i].id, hood[i].type);
       }
+    });
+    dbgLog('Loading ranks.json File...')
+    $.getJSON("/client/json/ranks.json", function(json) {
+      keynames = json.map(rank => rank.name);
     });
   });
   /**

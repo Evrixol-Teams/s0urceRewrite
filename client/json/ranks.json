@@ -1,0 +1,26 @@
+[
+    {
+        "name": "Bronze",
+        "level": 1
+    },
+    {
+        "name": "Silver",
+        "level": 10
+    },
+    {
+        "name": "Gold",
+        "level": 30
+    },
+    {
+        "name": "Platinum",
+        "level": 100
+    },
+    {
+        "name": "Diamond",
+        "level": 250
+    },
+    {
+        "name": "Master",
+        "level": 500
+    }
+]
