@@ -6,11 +6,12 @@ const Player = require('./Player');
 const Firewall = require('./Firewall');
 const Upgrade = require('./Upgrade');
 const HackingHandler = require('./HackingHandler');
+const {objToString,stringToObj}=require('../utils/serial.js');
 
 module.exports = class DatabaseManager {
     constructor(){
-        if(!fs.existsSync('utils/database.json')) fs.writeFileSync('utils/database.json', '[]');
-        /** @type {Array} */ this.database = JSON.parse(fs.readFileSync('utils/database.json'));
+        if(!fs.existsSync('utils/database.json')) fs.writeFileSync('utils/database.json', '[{"path":[],"value":[]}]');
+        /** @type {Array} */ this.database = stringToObj(fs.readFileSync('utils/database.json'));
     }
 
     /**
@@ -49,6 +50,7 @@ module.exports = class DatabaseManager {
         if(this.userExists(username)) throw new Error('Attempted to create duplicate user');
         var salt = Crypto.randomBytes(16).toString('hex');
         this.database.push({ username: username, password: this.hashPassword(password, salt), salt: salt, data: {} });
-        fs.writeFileSync('utils/database.json', JSON.stringify(this.database, null, '   '));
+        fs.writeFileSync('utils/database.json', objToString(this.database)); 
+        //dw bruh, the indentation happens in https://github.com/BleaknessGit/s0urceRewrite/blob/inDev-Waffles/utils/serial.js#L40
     }
 }
