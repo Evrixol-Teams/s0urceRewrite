@@ -38,8 +38,36 @@
 			$(document).ready(() => {
 				var updates = $('.updates');
 				var changelog = $('.changelog');
-				$.getJSON('client/js/updates.json').then(json => json.forEach(update => updates.append(`<div class="login-element-news"><div class="news-date">${update.date}</div><p style="font-size: 24px;">${update.title}</p><p>${update.description}</p><div class="news-date">written by: <b>${update.writtenBy}</b></div></div>`)));
-				$.getJSON('client/js/changelog.json').then(json => json.forEach(change => changelog.append(`<div class="login-element-news"><div class="news-date">${change.date} - ${change.version}</div><ul class="news-ul">${change.changes.map(c => `<li>${c}</li>`)}</ul></div>`)));
+				$.getJSON('client/json/updates.json').then(json => json.forEach(update => updates.append(`<div class="login-element-news"><div class="news-date">${update.date}</div><p style="font-size: 24px;">${update.title}</p><p>${update.description}</p><div class="news-date">written by: <b>${update.writtenBy}</b></div></div>`)));
+				$.getJSON('client/json/changelog.json').then(json => json.forEach(change => changelog.append(`<div class="login-element-news"><div class="news-date">${change.date} - ${change.version}</div><ul class="news-ul">${change.changes.map(c => `<li>${c}</li>`)}</ul></div>`)));
+			
+				var minersInventoryLeft = $('.window-miner-list-left');
+				var minersInventoryRight = $('.window-miner-list-right');
+				var minersShop = $('#window-shop-container');
+				$.getJSON('client/json/shop.json').then(json => {
+					for(var i = 0; i < json.Market.length; i++){
+						var element = i % 2 == 0 ? minersInventoryLeft : minersInventoryRight;
+						element.append(`
+							<div class="window-miner-list" id="shop-${json.Market[i].name.toLowerCase().split(' ').join('-')}-inv">	
+								<div class="window-headline window-miner-list-headline">Locked</div>
+								<img src="../client/img/icon-lock.png" class="window-miner-list-icon">
+								<div class="window-miner-list-count">
+									<span id="shop-${json.Market[i].name.toLowerCase().split(' ').join('-')}-amount"></span>
+								</div>
+								<div class="miner-list-background"></div>
+							</div>
+						`);
+
+						minersShop.append(`
+							<div class="window-shop-element" data-id="${i}" data-type="1" id="shop-${json.Market[i].name.toLowerCase().split(' ').join('-')}">
+								<img src="../client/img/icon-lock.png" class="shop-firewall-icon" style="float: left">
+								<div class="window-shop-element-info"><b>???</b><br>
+									<img src="../client/img/icon-bt.png" class="icon-small window-bt-icon"><span id="shop-${json.Market[i].name.toLowerCase().split(' ').join('-')}-value"></span>
+								</div>
+							</div>
+						`);
+					}
+				});
 			});
 		</script>
 	</head>
@@ -66,10 +94,10 @@
 				<div class="login-element" style="width: 280px; left: 356px; top: 150px; text-align: center">
 					
 					<form id="login-input-form" onSubmit="return false;" style="font-size: 18px">
-						<div class="input-form-wrapper">
+						<div class="input-form-wrapper" style="background-color: #0b0b0c;">
 							> <input type="text" class="input-form" id="login-input" autocomplete="off" spellcheck="false" maxlength="12" placeholder="Username" style="width: 245px; height: 38px">
 						</div>
-						<div class="input-form-wrapper" style="margin-top: 10px;">
+						<div class="input-form-wrapper" style="margin-top: 10px; background-color: #0b0b0c;">
 							> <input type="password" class="input-form" id="password-input" autocomplete="off" spellcheck="false" placeholder="Password" style="width: 245px; height: 38px;">
 						</div>
 					</form>
@@ -499,7 +527,7 @@
 						<img src="../client/img/icon-miner.png" class="icon-small window-title-icon">My Data Miners <span class="window-close-style window-close"><img src="../client/img/icon-close.png" class="window-close-img"></span>
 					</div>
 					
-					<div class="window-content" style="width: 320px; height: 440px">
+					<div class="window-content" style="width: 320px; display: inline-block;">
 					
 						<div class="window-miner-coins" style="background-color: rgba(96, 230, 163, 0.2)">
 							<div id="window-my-coinamount" style="font-size: 22px">23.245</div>
@@ -511,89 +539,9 @@
 						</div>
 							
 							
-						<div class="window-miner-list-left">
-							
-							<div class="window-miner-list" id="shop-basic-miner-inv">
-								
-								<div class="window-headline window-miner-list-headline">Locked</div>
-								
-								<img src="../client/img/icon-lock.png" class="window-miner-list-icon">
-								
-								<div class="window-miner-list-count">
-									<span id="shop-basic-miner-amount"></span>
-								</div>
-								
-								<div class="miner-list-background"></div>
-							</div>
-							
-							<div class="window-miner-list" id="shop-advanced-miner-inv">
-								
-								<div class="window-headline window-miner-list-headline">Locked</div>
-								
-								<img src="../client/img/icon-lock.png" class="window-miner-list-icon">
-								
-								<div class="window-miner-list-count">
-									<span id="shop-advanced-miner-amount"></span>
-								</div>
-								
-								<div class="miner-list-background"></div>
-							</div>
-							
-							<div class="window-miner-list" id="shop-mining-drill-inv">
-							
-								<div class="window-headline window-miner-list-headline">Locked</div>
-								
-								<img src="../client/img/icon-lock.png" class="window-miner-list-icon">
-								
-								<div class="window-miner-list-count">
-									<span id="shop-mining-drill-amount"></span>
-								</div>
-								
-								<div class="miner-list-background"></div>
-							</div>
-						</div>
+						<div class="window-miner-list-left"></div>
 						
-						<div class="window-miner-list-right">
-							
-							<div class="window-miner-list" id="shop-data-center-inv">
-							
-								<div class="window-headline window-miner-list-headline">Locked</div>
-								
-								<img src="../client/img/icon-lock.png" class="window-miner-list-icon">
-								
-								<div class="window-miner-list-count">
-									<span id="shop-data-center-amount"></span>
-								</div>
-								
-								<div class="miner-list-background"></div>
-							</div>
-							
-							<div class="window-miner-list" id="shop-bot-net-inv">
-							
-								<div class="window-headline window-miner-list-headline">Locked</div>
-								
-								<img src="../client/img/icon-lock.png" class="window-miner-list-icon">
-								
-								<div class="window-miner-list-count">
-									<span id="shop-bot-net-amount"></span>
-								</div>
-								
-								<div class="miner-list-background"></div>
-							</div>
-
-							<div class="window-miner-list" id="shop-quantum-server-inv">
-							
-								<div class="window-headline window-miner-list-headline">Locked</div>
-								
-								<img src="../client/img/icon-lock.png" class="window-miner-list-icon">
-								
-								<div class="window-miner-list-count">
-									<span id="shop-quantum-server-amount"></span>
-								</div>
-								
-								<div class="miner-list-background"></div>
-							</div>
-						</div>
+						<div class="window-miner-list-right"></div>
 						
 					</div>
 				</div>
@@ -612,50 +560,7 @@
 						
 							<div class="window-headline">Buy Data Miners</div>
 						
-							<div id="window-shop-container">
-								
-								<div class="window-shop-element" data-id="0" data-type="1" id="shop-basic-miner">
-									<img src="../client/img/icon-lock.png" class="shop-firewall-icon" style="float: left">
-									<div class="window-shop-element-info"><b>???</b><br>
-										<img src="../client/img/icon-bt.png" class="icon-small window-bt-icon"><span id="shop-basic-miner-value"></span>
-									</div>
-								</div>
-								
-								<div class="window-shop-element" data-id="1" data-type="1" id="shop-advanced-miner">
-									<img src="../client/img/icon-lock.png" class="shop-firewall-icon" style="float: left">
-									<div class="window-shop-element-info"><b>???</b><br>
-										<img src="../client/img/icon-bt.png" class="icon-small window-bt-icon"><span id="shop-advanced-miner-value"></span>
-									</div>
-								</div>
-								
-								<div class="window-shop-element" data-id="2" data-type="1" id="shop-mining-drill">
-									<img src="../client/img/icon-lock.png" class="shop-firewall-icon" style="float: left">
-									<div class="window-shop-element-info"><b>???</b><br>
-										<img src="../client/img/icon-bt.png" class="icon-small window-bt-icon"><span id="shop-mining-drill-value"></span>
-									</div>
-								</div>
-								
-								<div class="window-shop-element" data-id="3" data-type="1" id="shop-data-center">
-									<img src="../client/img/icon-lock.png" class="shop-firewall-icon" style="float: left">
-									<div class="window-shop-element-info"><b>???</b><br>
-										<img src="../client/img/icon-bt.png" class="icon-small window-bt-icon"><span id="shop-data-center-value"></span>
-									</div>
-								</div>
-								
-								<div class="window-shop-element" data-id="4" data-type="1" id="shop-bot-net">
-									<img src="../client/img/icon-lock.png" class="shop-firewall-icon" style="float: left">
-									<div class="window-shop-element-info"><b>???</b><br>
-										<img src="../client/img/icon-bt.png" class="icon-small window-bt-icon"><span id="shop-bot-net-value"></span>
-									</div>
-								</div>
-								
-								<div class="window-shop-element" data-id="5" data-type="1" id="shop-quantum-server">
-									<img src="../client/img/icon-lock.png" class="shop-firewall-icon" style="float: left">
-									<div class="window-shop-element-info"><b>???</b><br>
-										<img src="../client/img/icon-bt.png" class="icon-small window-bt-icon"><span id="shop-quantum-server-value"></span>
-									</div>
-								</div>
-							</div>
+							<div id="window-shop-container"></div>
 							
 						</div>
 						

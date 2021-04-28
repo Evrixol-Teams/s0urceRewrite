@@ -1,0 +1,69 @@
+{
+"Firewall": [
+	{
+		"id": "#shop-firewall-charge5",
+		"img": "../client/img/icon-charge-plus.png",
+		"title": "Charge x 5",
+		"desc": "Fills 5 Charges. You can buy it every 30 seconds."
+	},
+	
+	{
+		"id": "#shop-firewall-max_charge10",
+		"img": "../client/img/icon-charge-max.png",
+		"title": "Max Charge + 5",
+		"desc": "Increases Max. Charges +5"
+	},
+	
+	{
+		"id": "#shop-firewall-difficulty",
+		"img": "../client/img/icon-strength-plus.png",
+		"title": "Upgrade Strength",
+		"desc": "Makes it harder to hack your firewalls."
+	},
+	
+	{
+		"id": "#shop-firewall-regen",
+		"img": "../client/img/icon-regen-plus.png",
+		"title": "Increase Regen",
+		"desc": "Increases regeneration + 1/120sec."
+	}
+],
+
+"Market": [
+    {
+		"name": "Data Miner",
+		"description": "Generates a small amount of BT Coins.",
+		"rate": 0.0002
+	},
+
+	{
+		"name": "Advanced Miner",
+		"description": "The latest technology of miners, generating a lot more BT Coins.",
+		"rate": 0.0075
+	},
+	
+	{
+		"name": "Mining Drill",
+		"description": "Drills deep into the ancient BT Coin chambers and transports them right to your computer.",
+		"rate": 0.039
+	},
+	
+	{
+		"name": "Data Center",
+		"description": "An entire hall of advanced BT Coin Miners.",
+		"rate": 1.07
+	},
+	
+	{
+		"name": "Botnet",
+		"description": "Infected computers all around the world that mine BT Coins for you.",
+		"rate": 6.4
+	},
+	
+	{
+		"name": "Quantum Server",
+		"description": "Energy is extracted from the universe and converted by enormous pressure into the purest BT Coins.",
+		"rate": 53.33
+	}
+]
+}
