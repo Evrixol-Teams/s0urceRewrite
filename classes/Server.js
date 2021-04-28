@@ -3,6 +3,7 @@ const SocketIO = require('socket.io');
 const Player = require('./Player');
 const Firewall = require('./Firewall');
 const Upgrade = require('./Upgrade');
+const HackingHandler = require('./HackingHandler');
 
 module.exports = class Server{
 	/**
@@ -20,7 +21,7 @@ module.exports = class Server{
 			socket.player = new Player(this, socket);
 			socket.on('signIn', data => socket.player.signIn(data.name));
 			socket.on('playerRequest', data => socket.player.playerRequest(data));
-			socket.on('disconnect', () => this.sockets = this.sockets.filter(s => s.id != socket.id));
+			socket.on('disconnect', () => socket.player.disconnect());
 
 			this.sockets.push(socket);
 		});
@@ -43,11 +44,14 @@ module.exports = class Server{
 
 	runInterval(){
 		var task = { task: 2008, data: [], topFive: [] };
-		var players = this.getAllPlayers().filter(player => player.ingame).sort((a, b) => a.level - b.level);
+		var players = this.getAllPlayers().filter(player => player.ingame).sort((a, b) => b.level - a.level);
 
 		for(var i = 0; i < players.length; i++) task.data.push({
 			achievmentRank: players[i].achievmentRank,
-			comm: players[i].comm,
+			comm: {
+				first: players[i].comm[0],
+				second: players[i].comm[1]
+			},
 			country: players[i].country,
 			desc: players[i].description,
 			id: players[i].id,

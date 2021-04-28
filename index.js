@@ -10,6 +10,7 @@ const Server = require('./classes/Server');
 const Player = require('./classes/Player');
 const Firewall = require('./classes/Firewall');
 const Upgrade = require('./classes/Upgrade');
+const HackingHandler = require('./classes/HackingHandler');
 
 const Express = require('express');
 const http = require('http');
@@ -17,6 +18,7 @@ const http = require('http');
 (async () => {
 	const app = Express();
 	app.get('/', (req, res) => res.sendFile(__dirname + '/client/index.html'));
+	app.use('/client/img/word', Express.static(__dirname + '/client/img/word/', { extensions: ['png'] }))
 	app.use('/client', Express.static(__dirname + '/client'));
 	app.use('/ads', AdRemover);
 
