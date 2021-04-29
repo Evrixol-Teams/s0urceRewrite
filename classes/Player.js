@@ -179,7 +179,11 @@ module.exports = class Player{
 				break;
 			case(777):
 				if(data.word == undefined) break;
-				if(this.hackingHandler) this.hackingHandler.tryHackingWord(data.word);
+				if(this.hackingHandler){
+					this.hackingHandler.tryHackingWord(data.word);
+				}else{
+					this.socket.emit('mainPackage', { unique: [{ task: 2003, text: 'No target', action: 0 }] });
+				}
 				break;
 		}
 	}
