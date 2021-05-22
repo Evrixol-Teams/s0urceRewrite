@@ -21,7 +21,7 @@ module.exports = class Server{
 			console.log(`Connection from ${socket.id}`);
 
 			socket.player = new Player(this, socket);
-			socket.on('signIn', data => socket.player.signIn(data.name, data.password, data.register));
+			socket.on('signIn', data => socket.player.signIn(data.name, data.password, data.register, data.guest));
 			socket.on('playerRequest', data => socket.player.playerRequest(data));
 			socket.on('disconnect', () => socket.player.disconnect());
 

@@ -80,31 +80,38 @@ module.exports = class Player{
 	 * @param {String} username 
 	 * @param {String} password
 	 * @param {Boolean} register
+     * @param {Boolean} guest
 	 */
-	signIn(username, password, register){
-		if(username == undefined || password == undefined || username == '' || password == ''){
-			this.socket.emit('alert', 'Invalid Uername/Password');
-		}else{
-			if(register){
-				if(this.server.databaseManager.userExists(username)){
-					this.socket.emit('alert', 'That Username is taken');
-				}else{
-					this.server.databaseManager.register(username, password);
-					this.username = username;
-					this.socket.emit('prepareClient', { id: this.id });
-					this.update();
-				}
-			}else{
-				var user = this.server.databaseManager.login(username, password);
-				if(user){
-					this.username = username;
-					this.socket.emit('prepareClient', { id: this.id });
-					this.update();
-				}else{
-					this.socket.emit('alert', 'Invalid Username/Pasword');
-				}
-			}
-		}
+	signIn(username, password, register, guest){
+    if(guest){
+      this.username = `Guest${Math.floor(Math.random() * 10000)}`
+      this.socket.emit('prepareClient', { id: this.id });
+      this.update();
+    }else{
+      if(username == undefined || password == undefined || username == '' || password == ''){
+        this.socket.emit('alert', 'Invalid Uername/Password');
+      }else{
+        if(register){
+          if(this.server.databaseManager.userExists(username)){
+            this.socket.emit('alert', 'That Username is taken');
+          }else{
+            this.server.databaseManager.register(username, password);
+            this.username = username;
+            this.socket.emit('prepareClient', { id: this.id });
+            this.update();
+          }
+        }else{
+          var user = this.server.databaseManager.login(username, password);
+          if(user){
+            this.username = username;
+            this.socket.emit('prepareClient', { id: this.id });
+            this.update();
+          }else{
+            this.socket.emit('alert', 'Invalid Username/Pasword');
+          }
+        }
+      }
+    }
 	}
 
 	playerRequest(data){

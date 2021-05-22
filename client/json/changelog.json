@@ -1,5 +1,12 @@
 [
     {
+        "date": "22 May 2021",
+        "version": "1.1.1",
+        "changes": [
+            "Addded Guest Login feature"
+        ]
+    },
+    {
         "date": "28 April 2021",
         "version": "1.1.0",
         "changes": [

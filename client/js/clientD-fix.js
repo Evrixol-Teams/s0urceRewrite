@@ -556,9 +556,10 @@
   }
   /**
    * @param {Boolean} register
+   * @param {Boolean} guest
    * @return {undefined}
    */
-  function oldSection(register) {
+  function oldSection(register, guest) {
     var value = extend("vid_adin_s0urce");
     if (value !== undefined) {
       /** @type {number} */
@@ -575,7 +576,7 @@
     if (null !== adjacentAllyOrSelf && 2 == i) {
       adjacentAllyOrSelf.startPreRoll();
     } else {
-      apply(register);
+      apply(register, guest);
     }
   }
   /**
@@ -865,15 +866,21 @@
    * @param {Boolean} register
    * @return {undefined}
    */
-  function apply(register) {
-    options.name = $('input[id="login-input"]').val();
-    options.password = $('input[id="password-input"]').val();
+  function apply(register, guest) {
+    if(guest){
+      options.name = $('input[id="login-input"]').val();
+      options.password = $('input[id="password-input"]').val();
+    }else{
+      options.name = `Guest`;
+      options.password = 'Guest';
+    }
     cb("username", options.name, 180);
     $("#window-my-playername").text(options.name);
     res.emit("signIn", {
       name : options.name,
       password : options.password,
-      register : register
+      register : register,
+      guest: guest
     });
     open(0);
     if ($("#checkbox-tutorial").is(":checked")) {
@@ -1394,10 +1401,13 @@
       report("#topwindow-power");
     });
     $("#login-play").click(function() {
-      oldSection(false);
+      oldSection(false, false);
     });
     $("#register-play").click(() => {
-      oldSection(true);
+      oldSection(true, false);
+    });
+    $('#guest-play').click(() => {
+      oldSection(false, true);
     });
     $("#targetmessage-input-form").submit(function() {
       sendMessage();
