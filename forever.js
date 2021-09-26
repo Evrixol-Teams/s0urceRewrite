@@ -8,12 +8,12 @@ var child = new (forever.Monitor)('index.js', {
 });
 
 child.on('restart:code', function(code) {
-  console.error(`sciptr exited with code ${code}, restarting for the ${child.times}th time...`);
+  console.error(`script exited with code ${code}, restarting for the ${child.times}th time...`);
 });
 
 child.on('exit:code', function(code) {
   //var time = new Date().getTime();
-  console.error(`[${new Date()}]sciprt exited with code ${code}`);
+  console.error(`[${new Date()}]script exited with code ${code}`);
 });
 
 child.start();

@@ -1,0 +1,148 @@
+[
+   {
+      "path": [],
+      "value": []
+   },
+   {
+      "path": [
+         "0"
+      ],
+      "value": {}
+   },
+   {
+      "path": [
+         "0",
+         "username"
+      ],
+      "value": "uwu3"
+   },
+   {
+      "path": [
+         "0",
+         "password"
+      ],
+      "value": "ba67f6c497bbc7ee70a0be9b59e1e0981490135b14cc76e1a7e82f7456e89ccdc7faa8da98ca3a60a27b1e477703e92c62e75e346d555e7e58920b80830bc4d8"
+   },
+   {
+      "path": [
+         "0",
+         "salt"
+      ],
+      "value": "18037a75cc65f1a4b55e6ae3c840afb6"
+   },
+   {
+      "path": [
+         "0",
+         "data"
+      ],
+      "value": {}
+   },
+   {
+      "path": [
+         "1"
+      ],
+      "value": {}
+   },
+   {
+      "path": [
+         "1",
+         "username"
+      ],
+      "value": "YoursTruly"
+   },
+   {
+      "path": [
+         "1",
+         "password"
+      ],
+      "value": "1b998f1d8766e1d83616538f42fe367ba86360992f6d32c6d849d89b51952a10ef91a38f5c8c1b7ee03beef5a52b4f70447b09ef1ed97216c976dd8f8b3cd2b9"
+   },
+   {
+      "path": [
+         "1",
+         "salt"
+      ],
+      "value": "43f2036c5bcc6d20fab6dc1218662302"
+   },
+   {
+      "path": [
+         "1",
+         "data"
+      ],
+      "value": {}
+   },
+   {
+      "path": [
+         "2"
+      ],
+      "value": {}
+   },
+   {
+      "path": [
+         "2",
+         "username"
+      ],
+      "value": "Your5Truly"
+   },
+   {
+      "path": [
+         "2",
+         "password"
+      ],
+      "value": "62af05b02e83ad67046893130c2d383c082aacc304dc0fbab2a1f83c5be6f33a253f9c7146ade31d2e2b67d327ab9735ae3748b4a47a37dfebe7b055f3acda71"
+   },
+   {
+      "path": [
+         "2",
+         "salt"
+      ],
+      "value": "e99216ac2dbd92796c9a899e50ed2ba0"
+   },
+   {
+      "path": [
+         "2",
+         "data"
+      ],
+      "value": {}
+   },
+   {
+      "path": [
+         "3"
+      ],
+      "value": {}
+   },
+   {
+      "path": [
+         "3",
+         "username"
+      ],
+      "value": "Guest"
+   },
+   {
+      "path": [
+         "3",
+         "password"
+      ],
+      "value": "0c69dd90bb1f4632a0442da217c876b59d80ef45db5934b6db943078d19ee7839df9c39c6f537db280bbf3b7a75b243d555adcbf2df6b627051ab312a71a31c4"
+   },
+   {
+      "path": [
+         "3",
+         "salt"
+      ],
+      "value": "a7b43db354293f31f907bfbf94a5f68d"
+   },
+   {
+      "path": [
+         "3",
+         "data"
+      ],
+      "value": {}
+   },
+   {
+      "path": [
+         "length"
+      ],
+      "value": 4
+   }
+]
